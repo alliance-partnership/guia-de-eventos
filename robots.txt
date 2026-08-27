@@ -1,0 +1,35 @@
+User-agent: *
+Disallow: /
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"Add robots.txt to block indexing"

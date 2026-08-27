@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Hub Tático de Eventos — Guia do Parceiro (Blip id)</title>
+<meta name="theme-color" content="#0C4EC0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hub Parceiro">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-cyan: #0096FA;
+    --brand-blue: #1968F0;
+    --brand-blue-dark: #0036BD;
+    --blue-cobalt: #0C4EC0;
+    --night-blip: #072F73;
+    --navy: #0F172A;
+    --navy-dark: #182438;
+    --yellow: #FFC501;
+    --white: #FFFFFF;
+    --offwhite: #F8FAFC;
+    --ice-bg: #F0F7FF;
+    --gray-text: #64748B;
+    --gray-light: #E2E8F0;
+    --green-bg: #F0FDF4;
+    --green-border: #86EFAC;
+    --green-text: #166534;
+    --amber-bg: #FFFBEB;
+    --amber-border: #FDE68A;
+    --amber-text: #92400E;
+    --shadow-sm: 0 2px 6px rgba(15,23,42,0.06);
+    --shadow-md: 0 8px 24px rgba(15,23,42,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Open Sans', sans-serif; background: #F8FAFC; color: var(--navy); line-height: 1.5; font-size: 13.5px; padding-bottom: 60px; }
+  h1, h2, h3, .lexend { font-family: 'Lexend', 'Inter', 'Open Sans', sans-serif; }
+  
+  .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+  /* NAVEGAÇÃO PRINCIPAL FIXA E RESPONSIVA */
+  .main-nav-bar {
+    position: sticky; top: 0; z-index: 1000;
+    background: var(--night-blip); padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(7,47,115,0.3);
+    border-bottom: 3px solid var(--brand-cyan);
+    width: 100%;
+  }
+  .main-nav-inner {
+    max-width: 1200px; margin: 0 auto; display: flex; gap: 8px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    align-items: center;
+  }
+  .main-nav-inner::-webkit-scrollbar { display: none; }
+  .nav-tab-btn {
+    background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85);
+    border: none; padding: 10px 18px; border-radius: 20px; font-size: 12.5px; font-weight: 700;
+    font-family: 'Lexend', sans-serif; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; min-height: 40px;
+  }
+  .nav-tab-btn:hover { background: rgba(255,255,255,0.22); color: var(--white); }
+  .nav-tab-btn.active {
+    background: var(--yellow); color: var(--navy); font-weight: 800;
+    box-shadow: 0 2px 8px rgba(255,197,1,0.4);
+  }
+
+  /* ESTRUTURA DE CONTEÚDO DAS ABAS */
+  .tab-pane { display: none; width: 100%; }
+  .tab-pane.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HEADER COMPARTILHADO */
+  .header {
+    background: var(--white); color: var(--navy);
+    border-radius: 0 0 20px 20px; padding: 28px 32px; margin-bottom: 20px;
+    border-top: 6px solid var(--brand-cyan); border-bottom: 1px solid var(--gray-light);
+    box-shadow: var(--shadow-md); width: 100%;
+  }
+  .header.cobalt-theme {
+    background: linear-gradient(135deg, var(--blue-cobalt), var(--night-blip));
+    color: var(--white); border-top: none; border-bottom: 4px solid var(--yellow);
+  }
+  .header-tag { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--brand-cyan); margin-bottom: 4px; font-family: 'Lexend', sans-serif; }
+  .header.cobalt-theme .header-tag { color: var(--yellow); }
+  .header h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; font-family: 'Lexend', sans-serif; line-height: 1.25; }
+  .header.cobalt-theme h1 { color: var(--white); }
+  .header p { font-size: 14px; color: var(--gray-text); font-weight: 400; max-width: 900px; }
+  .header.cobalt-theme p { color: rgba(255,255,255,0.9); font-weight: 300; }
+
+  /* BANNER MENTALIDADE */
+  .cc-banner {
+    background: linear-gradient(135deg, var(--night-blip) 0%, #041E4A 100%);
+    border-radius: 12px; padding: 16px 22px; margin-bottom: 24px;
+    border-left: 5px solid var(--yellow); display: flex; align-items: center; gap: 14px; width: 100%;
+  }
+  .cc-banner-icon { font-size: 24px; flex-shrink: 0; }
+  .cc-banner-label { font-family: 'Lexend', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--yellow); margin-bottom: 2px; }
+  .cc-banner-text { font-size: 13.5px; color: rgba(255,255,255,0.92); line-height: 1.45; }
+  .cc-banner-text strong { color: #fff; }
+
+  /* COMPONENTES DE ESTRUTURA */
+  .topic-block { margin-bottom: 32px; width: 100%; }
+  .topic-block.with-separator { border-top: 2px solid var(--gray-light); padding-top: 24px; margin-top: 32px; }
+  .pane-title {
+    font-size: 18px; font-weight: 800; color: var(--navy);
+    font-family: 'Lexend', sans-serif;
+    border-bottom: 3px solid var(--brand-blue); padding-bottom: 6px;
+    margin-bottom: 12px; display: inline-block; max-width: 100%;
+  }
+  .topic-intro { font-size: 13.5px; color: var(--gray-text); margin-bottom: 16px; line-height: 1.5; }
+
+  /* ACCORDIONS RESPONSIVOS */
+  .accordion-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+  .accordion-item { background: var(--white); border: 1px solid var(--gray-light); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color 0.2s; width: 100%; }
+  .accordion-item.open { border-color: var(--brand-blue); }
+  .accordion-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; background: var(--white); min-height: 48px; }
+  .accordion-title { font-size: 14px; font-weight: 700; color: var(--navy); font-family: 'Lexend', sans-serif; padding-right: 10px; }
+  .accordion-icon { font-size: 16px; font-weight: 800; color: var(--brand-blue); transition: transform 0.2s; flex-shrink: 0; }
+  .accordion-item.open .accordion-icon { transform: rotate(180deg); }
+  .accordion-content { display: none; padding: 0 20px 20px 20px; background: var(--white); }
+  .accordion-item.open .accordion-content { display: block; }
+
+  /* BOXES DE ESTRATÉGIA */
+  .concept-box { background: var(--ice-bg); border-left: 4px solid var(--brand-blue); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--navy); line-height: 1.5; margin-bottom: 10px; }
+  .concept-box .box-label { color: var(--brand-blue); font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; font-family: 'Lexend', sans-serif; }
+  
+  .practice-box { background: var(--green-bg); border-left: 4px solid var(--green-border); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--green-text); line-height: 1.5; margin-bottom: 10px; position: relative; }
+  .practice-box .box-label { color: var(--green-text); font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; font-family: 'Lexend', sans-serif; }
+
+  .exception-box { background: var(--amber-bg); border-left: 4px solid var(--amber-border); border-radius: 8px; padding: 12px 14px; font-size: 12.5px; color: var(--amber-text); line-height: 1.5; margin-bottom: 10px; }
+  .exception-box .box-label { color: var(--amber-text); font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; font-family: 'Lexend', sans-serif; }
+
+  .copy-script-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--blue-cobalt); color: var(--white); border: none;
+    padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 700;
+    cursor: pointer; font-family: 'Lexend', sans-serif; margin-top: 8px;
+    transition: background 0.2s; min-height: 36px;
+  }
+  .copy-script-btn:hover { background: var(--brand-blue-dark); }
+
+  /* TIMELINE RESPONSIVA */
+  .timeline-container { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; width: 100%; }
+  .timeline-card {
+    background: var(--white); border: 1px solid var(--gray-light); border-left: 5px solid var(--brand-cyan);
+    border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); width: 100%;
+  }
+  .timeline-card.urgent { border-left-color: #EF4444; }
+  .timeline-card.warning { border-left-color: #F59E0B; }
+  .timeline-card.success { border-left-color: #10B981; }
+  .timeline-card.cobalt { border-left-color: var(--blue-cobalt); }
+  
+  .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
+  .timeline-day { font-family: 'Lexend', sans-serif; font-size: 13px; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 6px; }
+  .timeline-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; background: #E0F2FE; color: #0369A1; }
+
+  /* TABELAS RESPONSIVAS */
+  .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 8px; border: 1px solid var(--gray-light); }
+  .tactical-table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 12.5px; }
+  .tactical-table th, .tactical-table td { padding: 10px 12px; border: 1px solid var(--gray-light); text-align: left; }
+  .tactical-table th { background: #F1F5F9; font-family: 'Lexend', sans-serif; font-weight: 700; color: var(--navy); font-size: 11px; text-transform: uppercase; }
+
+  /* CHECKLIST RESPONSIVO */
+  .checklist-group { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; width: 100%; }
+  .check-item {
+    display: flex; align-items: center; gap: 10px; background: #F8FAFC; padding: 10px 14px;
+    border-radius: 8px; border: 1px solid var(--gray-light); cursor: pointer; transition: background 0.2s; min-height: 44px;
+  }
+  .check-item:hover { background: #F1F5F9; }
+  .check-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--brand-blue); cursor: pointer; flex-shrink: 0; }
+  .check-item.checked { background: var(--green-bg); border-color: var(--green-border); text-decoration: line-through; color: var(--gray-text); }
+
+  /* FILTROS E GRID DE CARDS RESPONSIVOS */
+  .filter-section {
+    background: var(--white); border-radius: 14px; padding: 18px 20px; border: 1px solid var(--gray-light);
+    margin-bottom: 20px; box-shadow: var(--shadow-sm); width: 100%;
+  }
+  .filter-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+  .filter-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-text); font-family: 'Lexend', sans-serif; }
+  .reset-btn {
+    background: transparent; border: none; color: var(--brand-cyan); font-size: 11px; font-weight: 700;
+    cursor: pointer; font-family: 'Lexend', sans-serif; display: none; text-decoration: underline; padding: 4px 8px;
+  }
+  .reset-btn.visible { display: inline-block; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    background: #F1F5F9; border: 1px solid var(--gray-light); color: var(--navy);
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+    font-family: 'Lexend', sans-serif; transition: all 0.2s ease; user-select: none; min-height: 36px;
+  }
+  .chip:hover { border-color: var(--brand-cyan); color: var(--brand-cyan); }
+  .chip.active { background: var(--brand-cyan); color: var(--white); border-color: var(--brand-cyan); }
+  .chip.active-cobalt { background: var(--blue-cobalt); color: var(--white); border-color: var(--blue-cobalt); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; width: 100%; }
+  .card {
+    background: var(--white); border-radius: 14px; padding: 18px 20px;
+    display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-light); border-left: 5px solid var(--brand-cyan);
+    min-height: 120px; width: 100%;
+  }
+  .card.cobalt-border { border-left-color: var(--blue-cobalt); }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .card:active { transform: scale(0.98); }
+
+  .badge-container { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 8px; }
+  .situation-badge {
+    background: #F0F7FF; color: #0369A1; border: 1px solid #BAE6FD;
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 3px 9px; border-radius: 6px; font-family: 'Lexend', sans-serif; flex-shrink: 0;
+  }
+  .card-badges { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+  .badge { font-size: 9px; padding: 3px 7px; border-radius: 10px; font-weight: 800; text-transform: uppercase; font-family: 'Lexend', sans-serif; white-space: nowrap; }
+  .badge-land     { background: #E0F2FE; color: #0369A1; }
+  .badge-expand   { background: #DCFCE7; color: #166534; }
+  .badge-others   { background: #F3E8FF; color: #6B21A8; }
+  .badge-universal{ background: #FEF3C7; color: #92400E; }
+
+  .card-trigger { font-size: 14.5px; font-weight: 800; color: var(--navy); line-height: 1.35; font-family: 'Lexend', sans-serif; }
+  .card-sub { font-size: 12px; color: var(--gray-text); margin-top: 4px; font-weight: 500; line-height: 1.4; }
+  .card-footer-hint { font-size: 11px; color: var(--brand-cyan); margin-top: 12px; text-align: right; font-weight: 700; font-family: 'Lexend', sans-serif; }
+  .card-footer-hint.cobalt-text { color: var(--blue-cobalt); }
+
+  /* MODAIS RESPONSIVOS */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-card {
+    background: var(--white); border-radius: 16px; max-width: 640px; width: 100%;
+    max-height: 90vh; overflow-y: auto; padding: 0;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.22); position: relative;
+    border: 1px solid var(--gray-light); animation: modalIn 0.22s ease-out;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.9);
+    border: 1px solid var(--gray-light); width: 32px; height: 32px; border-radius: 50%;
+    font-size: 16px; font-weight: 800; cursor: pointer; color: var(--navy);
+    display: flex; align-items: center; justify-content: center; z-index: 10;
+  }
+
+  .modal-header { padding: 24px 28px 18px 28px; border-bottom: 1px solid var(--gray-light); }
+  .modal-situation { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--brand-cyan); letter-spacing: 1px; font-family: 'Lexend', sans-serif; margin-bottom: 6px; }
+  .modal-situation.cobalt { color: var(--blue-cobalt); }
+  .modal-title { font-size: 18px; font-weight: 800; color: var(--navy); font-family: 'Lexend', sans-serif; line-height: 1.3; }
+
+  .modal-zone-action { background: var(--ice-bg); padding: 18px 28px; border-bottom: 1px solid #DBEAFE; }
+  .zone-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; font-family: 'Lexend', sans-serif; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+  .zone-label.blue { color: var(--brand-blue); }
+  .zone-label.green { color: var(--green-text); }
+
+  .script-box {
+    background: var(--white); border-left: 4px solid var(--brand-cyan); padding: 12px 14px;
+    border-radius: 8px; font-size: 13px; font-style: italic; color: var(--navy); line-height: 1.5; position: relative;
+  }
+  .script-box.cobalt { border-left-color: var(--blue-cobalt); padding-bottom: 44px; }
+
+  .copy-btn {
+    position: absolute; bottom: 10px; right: 10px; background: var(--blue-cobalt); color: var(--white);
+    border: none; padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: 700;
+    cursor: pointer; font-family: 'Lexend', sans-serif; transition: background 0.2s ease; min-height: 32px;
+  }
+  .copy-btn:hover { background: var(--blue-dark); }
+
+  .how-box { background: var(--blue-cobalt); color: var(--white); border-radius: 10px; padding: 14px 16px; font-size: 13.5px; font-weight: 700; line-height: 1.5; font-family: 'Lexend', sans-serif; }
+  .posture-box { background: var(--white); border-left: 3px solid #CBD5E1; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: var(--gray-text); line-height: 1.45; font-style: italic; }
+
+  .modal-zone-care { padding: 18px 28px; border-bottom: 1px solid var(--gray-light); }
+  .care-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .care-box { padding: 10px 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; background: #F8FAFC; border-left: 3px solid #CBD5E1; color: var(--navy); }
+  .care-box strong { display: block; margin-bottom: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-text); font-family: 'Lexend', sans-serif; }
+  .why-text { font-size: 12.5px; color: var(--navy); line-height: 1.5; margin-bottom: 14px; }
+
+  .action-bullet { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--navy); line-height: 1.45; }
+  .action-bullet::before { content: "•"; color: var(--brand-cyan); font-weight: 900; font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+
+  .modal-zone-gold { padding: 14px 28px 20px 28px; background: linear-gradient(135deg, #FFFDE7 0%, #FFFBEB 100%); border-radius: 0 0 16px 16px; }
+  .gold-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #92400E; letter-spacing: 0.7px; font-family: 'Lexend', sans-serif; margin-bottom: 4px; }
+  .gold-text { font-size: 13px; color: #78350F; font-weight: 500; line-height: 1.5; }
+
+  .filter-saved-msg { font-size: 10.5px; color: var(--green-text); font-weight: 600; font-family: 'Lexend', sans-serif; opacity: 0; transition: opacity 0.4s ease; }
+  .filter-saved-msg.visible { opacity: 1; }
+
+  .napkin-canvas { background: #FFFDF5; border: 2px dashed #CBD5E1; border-radius: 12px; padding: 16px; margin-top: 12px; position: relative; }
+  .napkin-header { font-family: 'Lexend', sans-serif; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--blue-cobalt); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .napkin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .napkin-col { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; }
+  .napkin-col-title { font-family: 'Lexend', sans-serif; font-size: 11px; font-weight: 800; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--gray-light); }
+  .napkin-col-title.bad { color: #DC2626; }
+  .napkin-col-title.good { color: var(--brand-blue); }
+  .napkin-flow { display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; color: var(--navy); }
+  .napkin-step { background: #F8FAFC; padding: 6px 8px; border-radius: 4px; border-left: 3px solid #94A3B8; }
+  .napkin-step.bad-step { border-left-color: #F87171; }
+  .napkin-step.good-step { border-left-color: var(--brand-cyan); font-weight: 600; }
+  .napkin-arrow { text-align: center; color: var(--gray-text); font-size: 10px; line-height: 1; }
+
+  .footer { text-align: center; font-size: 12px; color: var(--gray-text); margin-top: 40px; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--gray-text); font-size: 14px; grid-column: 1 / -1; }
+
+  /* MEDIA QUERIES PARA ADAPTAÇÃO TABLET E MOBILE */
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+    .header { padding: 20px 22px; }
+    .header h1 { font-size: 22px; }
+    .pane-title { font-size: 16px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .napkin-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    body { padding-bottom: 80px; }
+    .container { padding: 0 12px; }
+    .header { padding: 18px 16px 16px; border-radius: 0 0 16px 16px; margin-bottom: 12px; }
+    .header h1 { font-size: 19px; }
+    .header p { font-size: 12.5px; }
+
+    .cc-banner { padding: 12px 14px; gap: 10px; margin-bottom: 16px; flex-direction: row; }
+    .cc-banner-icon { font-size: 18px; }
+    .cc-banner-text { font-size: 12px; }
+
+    .filter-section { padding: 12px 14px; border-radius: 12px; margin-bottom: 16px; }
+    .chips { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; scrollbar-width: none; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { white-space: nowrap; flex-shrink: 0; padding: 6px 12px; font-size: 11.5px; }
+
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .card { min-height: auto; padding: 16px; }
+    .card-trigger { font-size: 14px; }
+
+    .timeline-header { flex-direction: column; align-items: flex-start; }
+
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal-card { max-width: 100%; width: 100%; max-height: 92vh; border-radius: 20px 20px 0 0; animation: sheetUp 0.28s cubic-bezier(0.32,0.72,0,1); }
+    @keyframes sheetUp { from { transform: translateY(100%); opacity: 0.6; } to { transform: translateY(0); opacity: 1; } }
+    .modal-card::before { content: ''; display: block; width: 36px; height: 4px; background: var(--gray-light); border-radius: 2px; margin: 10px auto 0; }
+
+    .modal-header { padding: 14px 18px; }
+    .modal-zone-action { padding: 16px 18px; }
+    .modal-zone-care { padding: 16px 18px; }
+    .modal-zone-gold { padding: 14px 18px 24px; }
+    .modal-title { font-size: 16px; }
+    .modal-close { top: 12px; right: 12px; width: 30px; height: 30px; font-size: 14px; }
+    .care-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BARRA FIXA DE NAVEGAÇÃO ENTRE ABAS DA PARCERIA -->
+<nav class="main-nav-bar">
+  <div class="main-nav-inner">
+    <button class="nav-tab-btn active" onclick="switchTab(1)">🎟️ Convites & Pré-Evento</button>
+    <button class="nav-tab-btn" onclick="switchTab(2)">🎲 O Jogo do Evento</button>
+    <button class="nav-tab-btn" onclick="switchTab(3)">📍 Atuação Presencial</button>
+    <button class="nav-tab-btn" onclick="switchTab(4)">💬 Respostas Rápidas</button>
+    <button class="nav-tab-btn" onclick="switchTab(5)">📘 Playbook Tático</button>
+    <button class="nav-tab-btn" onclick="switchTab(6)">📈 Práticas Pós-Evento</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ================================================================= -->
+  <!-- ABA 1: ESTRATÉGIA DE CONVITES & ORIENTAÇÃO PRÉ-EVENTO -->
+  <!-- ================================================================= -->
+  <div class="tab-pane active" id="tab-pane-1">
+    <header class="header cobalt-theme">
+      <div class="header-tag">Guia do Parceiro · Ferramenta de Vendas</div>
+      <h1>Estratégia de Convites & Roteiro Pré-Evento</h1>
+      <p>Transforme seus ingressos no maior trunfo comercial do ano. O convite é a cortesia perfeita para reabrir portas, acelerar conversas e gerar receita.</p>
+    </header>
+
+    <div class="cc-banner">
+      <div class="cc-banner-icon">💡</div>
+      <div>
+        <div class="cc-banner-label">A Lógica Central do Convite</div>
+        <div class="cc-banner-text">O convite é um motivo legítimo de aproximação. Ele não parece cobrança, parece cortesia. Você não está pedindo nada — está oferecendo algo de alto valor (ingressos cortesia de R$ 750,00 cada). Isso muda totalmente a receptividade do cliente.</div>
+      </div>
+    </div>
+
+    <!-- TÓPICO PRE-EVENTO: 3 DIAS ANTERIORES -->
+    <section class="topic-block">
+      <div class="pane-title">1. Orientação Pré-Evento: Linha do Tempo dos 3 Dias Anteriores (D-3 a D-0)</div>
+      <p class="topic-intro">A maior parte do sucesso no evento é decidida na preparação prévia. Siga o cronograma exato para garantir presença confirmada e agenda cheia no pavilhão.</p>
+
+      <div class="timeline-container">
+        
+        <div class="timeline-card warning">
+          <div class="timeline-header">
+            <span class="timeline-day">🗓️ D-3 (72 Horas Antes) — Aceleração de Inscrições & Resgate de Convites</span>
+            <span class="timeline-badge" style="background:#FEF3C7; color:#92400E;">Foco: Cobrança Amigável & Conversão de Inscrição</span>
+          </div>
+          <div class="concept-box">
+            <div class="box-label">🎯 Ações Prioritárias (Para Convites Já Enviados)</div>
+            • <strong>Cobrança Ativa de Inscrição:</strong> Recontate imediatamente todos os clientes que receberam o convite mas ainda não concluíram o cadastro no Sympla.<br>
+            • <strong>Lembrete de Vaga Reservada:</strong> Avise que o código/link cortesia expira em breve para redistribuição ("Preciso confirmar sua vaga no sistema até hoje às 18h").<br>
+            • <strong>Contato via Áudio/WhatsApp Direct:</strong> Mande um áudio curto de 15s lembrando do link para facilitar o resgate na hora pelo celular.<br>
+            • <strong>Checagem com o CPM:</strong> Valide no painel de inscrições do parceiro quem já resgatou o ingresso e quem está pendente.
+          </div>
+        </div>
+
+        <div class="timeline-card urgent">
+          <div class="timeline-header">
+            <span class="timeline-day">🗓️ D-2 (48 Horas Antes) — Confirmação Escrita & Encontro Marcado</span>
+            <span class="timeline-badge" style="background:#FEE2E2; color:#991B1B;">Foco: Travar Compromisso</span>
+          </div>
+          <div class="concept-box">
+            <div class="box-label">🎯 Ações Prioritárias</div>
+            • <strong>Disparo de Confirmação Obrigatório:</strong> Envie mensagem por escrito definindo prazo limite para reserva nominal no Sympla.<br>
+            • <strong>Defina Ponto de Encontro:</strong> Não deixe o encontro para o acaso. Defina horário ("Te encontro às 10h na entrada/café").<br>
+            • <strong>Puxar Decisores Adicionais:</strong> Pergunte se o seu contato operacional pode trazer o gestor ou dono do orçamento.<br>
+            • <strong>Briefing com a Equipe:</strong> Faça o alinhamento interno com o seu time parceiro sobre quais clientes estarão presentes no pavilhão.
+          </div>
+        </div>
+
+        <div class="timeline-card success">
+          <div class="timeline-header">
+            <span class="timeline-day">🗓️ D-1 (24 Horas Antes) — Lembrete Prático & Logística</span>
+            <span class="timeline-badge" style="background:#D1FAE5; color:#065F46;">Foco: Reduzir No-Show</span>
+          </div>
+          <div class="concept-box">
+            <div class="box-label">🎯 Ações Prioritárias</div>
+            • <strong>Lembrete Utilitário:</strong> Envie endereço (Transamerica Expo Center - SP), horário de credenciamento (a partir das 9h) e dicas de estacionamento/Uber.<br>
+            • <strong>Verificação do QR Code:</strong> Recomende que o cliente tenha o ingresso salvo na carteira do celular.<br>
+            • <strong>Ancoragem de Valor:</strong> Reforce a frase de impacto: <em>"A venda começa em uma conversa. O churn pela falta dela."</em>
+          </div>
+        </div>
+
+        <div class="timeline-card cobalt">
+          <div class="timeline-header">
+            <span class="timeline-day">🚀 D-0 (Dia do Evento - Manhã) — Boas-Vindas Presenciais</span>
+            <span class="timeline-badge" style="background:#DBEAFE; color:#1E40AF;">Foco: Recepção & Conexão</span>
+          </div>
+          <div class="concept-box">
+            <div class="box-label">🎯 Ações Prioritárias</div>
+            • <strong>"Já estou no pavilhão!":</strong> Envie uma foto ou localização assim que chegar no local.<br>
+            • <strong>Anfitrião Ativo:</strong> Aguarde seu convidado na entrada ou direcione-o para o ponto do parceiro/Espaço Blip.<br>
+            • <strong>Agendamento em Campo:</strong> Trave os próximos passos de follow-up diretamente na agenda durante o papo presencial.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TÓPICO 2: ONDE USAR OS CONVITES -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">2. Onde Usar Seus Convites de Vendas (6 Pilares)</div>
+      <p class="topic-intro">Saiba exatamente quais públicos abordar para extrair o máximo de pipeline e conversão comercial com seus ingressos.</p>
+
+      <div class="accordion-group">
+        
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">1. Reanimar Oportunidades Perdidas & 2. Destravar Propostas em Aberto</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Estratégia</div>
+              <strong>Perdas (últimos 6 a 12 meses):</strong> Propostas que travaram por preço, timing ou sumiram sem um "não" claro. O convite reabre o diálogo sem constrangimento. Solicite a lista ao seu CPM.<br><br>
+              <strong>Propostas em Aberto:</strong> Use o evento como marco temporal natural para acelerar fechamentos do trimestre ("Queria que você visse isso rodando na prática antes de tomar a decisão").
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">3. Subir de Nível no Cliente & 4. Reativar Base Inativa</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Estratégia</div>
+              <strong>Subir de Nível:</strong> Peça ao contato operacional que traga o gestor ou dono do orçamento. O evento de autoridade é a desculpa perfeita para acessar quem normalmente não aceita reunião comercial.<br><br>
+              <strong>Base Inativa:</strong> Clientes que pararam de comprar. O convite comunica <em>"você continua importante para nós"</em> antes de qualquer tentativa de venda.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">5. Indicação com Par & 6. Abrir Portas em Contas Frias</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Estratégia</div>
+              <strong>Indicação com Par:</strong> Ofereça dois ingressos — um para seu cliente e outro para um parceiro do setor que ele considere que se beneficiaria. Você ganha um lead qualificado com aval de terceiro.<br><br>
+              <strong>Contas Frias (Outbound):</strong> Para contas estratégicas que nunca responderam, um convite nominal de cortesia é a mensagem com maior taxa de resposta do mês.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TÓPICO 3: FUNDAMENTOS E GATILHOS -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">3. Fundamentos Práticos de Marketing & Gatilhos Mentais</div>
+      <p class="topic-intro">Entender o mecanismo por trás do convite permite improvisar com maestria em qualquer conversa.</p>
+
+      <div class="table-responsive">
+        <table class="tactical-table">
+          <thead>
+            <tr>
+              <th>Gatilho Mental</th>
+              <th>Como Aplicar no Convite</th>
+              <th>Regra de Ouro / Cuidado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Reciprocidade</strong></td>
+              <td>Oferecer um ingresso de valor (R$ 750,00) sem pedir nada em troca gera uma conexão positiva.</td>
+              <td>Entregue sem condicionar. "Te dou o ingresso se fechar reunião" destrói o efeito e vira barganha.</td>
+            </tr>
+            <tr>
+              <td><strong>Escassez</strong></td>
+              <td>"Recebi apenas 2 convites nominais e escolhi você" funciona muito melhor que "temos vagas".</td>
+              <td>A escassez deve ser real. Se você inventar um limite falso, perde total credibilidade.</td>
+            </tr>
+            <tr>
+              <td><strong>Urgência</strong></td>
+              <td>Estabeleça prazos intermediários: "Preciso confirmar a lista nominal até quinta-feira".</td>
+              <td>Sem deadline intermediário antes do evento, o cliente deixa a confirmação para a última hora.</td>
+            </tr>
+            <tr>
+              <td><strong>Ancoragem de Valor</strong></td>
+              <td>Cite abertamente o valor oficial do ingresso cortesia (R$ 750,00 no Sympla).</td>
+              <td>Amplifica a percepção do presente concedido e fortalece a reciprocidade.</td>
+            </tr>
+            <tr>
+              <td><strong>Prova Social & Exclusividade</strong></td>
+              <td>Mencione pares do mesmo setor que confirmaram presença. "Lista fechada para executivos".</td>
+              <td>Pessoas valorizam mais o que é selecionado do que o que parece distribuído massivamente.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4: MODELOS DE MENSAGENS -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">4. Modelos de Mensagens (Scripts com Cópia Rápida)</div>
+      <p class="topic-intro">Copie e adapte os roteiros validados para cada cenário de recontato comercial.</p>
+
+      <div class="accordion-group">
+        
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Roteiro 1: Oportunidade Perdida & Roteiro 2: Proposta em Aberto</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            
+            <div class="practice-box">
+              <div class="box-label">💬 Oportunidade Perdida</div>
+              "Oi [Nome], tudo bem? Lembrei de você agora. No dia 3 de setembro acontece o Blip id 2026, em São Paulo — é a 5ª edição do maior evento de IA Conversacional do mundo, e uma das trilhas é exatamente sobre [o ponto que travou a conversa: custo de atendimento / ROI / integração]. Separei um ingresso no seu nome, sem compromisso nenhum. Só acho que vale você ver o que já está rodando na prática. Posso confirmar?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+            <div class="practice-box">
+              <div class="box-label">💬 Proposta em Aberto</div>
+              "[Nome], antes de você bater o martelo, tem algo que acho que ajuda: no dia 3/9 tem o Blip id 2026 em São Paulo, e uma das trilhas é sobre como transformar conversa em receita com cases de empresas que já implementaram. Guardei um lugar para você. Topa ir?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Roteiro 3: Cliente Inativo & Roteiro 4: Conta Fria</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            
+            <div class="practice-box">
+              <div class="box-label">💬 Cliente Inativo</div>
+              "Oi [Nome], faz tempo! Vou estar no Blip id 2026 no dia 3 de setembro, em São Paulo, e a primeira pessoa que pensei em chamar foi você. Ingresso reservado no seu nome. Vai ser bom te ver e te mostrar o que mudou de lá para cá."
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+            <div class="practice-box">
+              <div class="box-label">💬 Conta Fria (Prospecção)</div>
+              "[Nome], recebi alguns convites nominais para o Blip id 2026 (3/9, Transamerica Expo Center) e escolhi mandar um para você por causa de [motivo específico: volume de atendimento no WhatsApp / expansão do e-commerce]. É o maior evento de IA Conversacional do mundo e reúne lideranças de Marketing, Vendas, CX e Tecnologia. Lista fechada. Posso reservar seu lugar?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Roteiro 5: Subir de Nível no Cliente & Roteiro 6: Confirmação 48h Antes</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            
+            <div class="practice-box">
+              <div class="box-label">💬 Subir de Nível (Envolver Gestor)</div>
+              "[Nome], no dia 3/9 tem o Blip id 2026 em São Paulo. Consegui dois lugares e pensei em você e em quem decide orçamento de [atendimento / CX / marketing] aí. O conteúdo é de nível de diretoria — receita, eficiência e dados. Faz sentido eu reservar um lugar para o [cargo/nome] também?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+            <div class="practice-box">
+              <div class="box-label">💬 Confirmação 48h Antes (D-2)</div>
+              "[Nome], passando para confirmar você no Blip id 2026 — quinta, dia 3, a partir das 9h no Transamerica Expo Center. Vou estar lá desde a abertura. Que horas você chega? Combino de te encontrar na entrada e já te apresento ao time!"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TÓPICO 5: CHECKLIST RÁPIDO -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">5. Checklist Rápido de Sucesso do Parceiro</div>
+      <p class="topic-intro">Marque os itens conforme for concluindo a preparação comercial para o evento:</p>
+
+      <div class="checklist-group">
+        <label class="check-item"><input type="checkbox"> Listei minhas perdas dos últimos 12 meses e alinhei com o CPM</label>
+        <label class="check-item"><input type="checkbox"> Mapeei todas as propostas em aberto para aceleração de fechamento</label>
+        <label class="check-item"><input type="checkbox"> Selecionei os clientes inativos estratégicos para reativação</label>
+        <label class="check-item"><input type="checkbox"> Convidei preferencialmente por voz/áudio e confirmei por escrito</label>
+        <label class="check-item"><input type="checkbox"> Defini prazo de confirmação intermediário antes da data do evento</label>
+        <label class="check-item"><input type="checkbox"> Combinei horário e ponto de encontro presencial no pavilhão</label>
+        <label class="check-item"><input type="checkbox"> Fiz o disparo de confirmação 48h antes (D-2)</label>
+        <label class="check-item"><input type="checkbox"> Agendei os próximos passos e reuniões síncronas diretamente no local</label>
+      </div>
+    </section>
+
+    <footer class="footer">Hub do Parceiro · Guia Prático para o Blip id</footer>
+  </div>
+
+
+  <!-- ================================================================= -->
+  <!-- ABA 2: O JOGO DO EVENTO -->
+  <!-- ================================================================= -->
+  <div class="tab-pane" id="tab-pane-2">
+    <header class="header cobalt-theme">
+      <div class="header-tag">Guia do Parceiro · Metodologia Event-Led Sales</div>
+      <h1>O Jogo do Evento: Aceleração de Pipeline & Experiência</h1>
+      <p>Aprenda a conectar os palcos, conteúdos oficiais e totens do Blip id ao nível de consciência do seu cliente para avançá-lo no pipeline do parceiro no mesmo dia.</p>
+    </header>
+
+    <div class="cc-banner">
+      <div class="cc-banner-icon">🎯</div>
+      <div>
+        <div class="cc-banner-label">A Filosofia do Evento de Mercado</div>
+        <div class="cc-banner-text">Um evento de mercado existe para <strong>compactar o tempo de decisão de compra</strong>. O cliente não compra no pavilhão por causa de um pitch direto, mas porque viveu uma experiência consultiva, viu cases de grandes marcas nos palcos e teve sua dor validada.</div>
+      </div>
+    </div>
+
+    <!-- MENTALIDADE E MUDANÇA DE ABORDAGEM -->
+    <section class="topic-block">
+      <div class="pane-title">1. A Mentalidade de Experiência: Mudança na Atitude Comercial</div>
+      <p class="topic-intro">Para extrair o máximo de resultado do Blip id, o vendedor do parceiro deve mudar sua postura comercial no pavilhão:</p>
+
+      <div class="table-responsive">
+        <table class="tactical-table">
+          <thead>
+            <tr>
+              <th>Atitude Tradicional (Evitar no Evento)</th>
+              <th>Atuação Consultiva baseada em Experiência (Adotar)</th>
+              <th>Impacto na Percepção do Cliente</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:#DC2626; font-weight:700;">Vendedor de Produto</td>
+              <td style="color:var(--brand-blue); font-weight:800;">Curador de Jornada do Pavilhão</td>
+              <td>O lead enxerga você como um anfitrião que o orienta sobre o melhor conteúdo do evento.</td>
+            </tr>
+            <tr>
+              <td style="color:#DC2626; font-weight:700;">Pitch Genérico de Recursos</td>
+              <td style="color:var(--brand-blue); font-weight:800;">Conexão com Cases do Palco</td>
+              <td>O cliente vê a aplicação real da tecnologia em grandes marcas antes de falar de contrato.</td>
+            </tr>
+            <tr>
+              <td style="color:#DC2626; font-weight:700;">Pressão por Fechamento no Corredor</td>
+              <td style="color:var(--brand-blue); font-weight:800;">Troca de Diagnóstico & Compromisso de Agenda</td>
+              <td>Desarma a defensividade e garante uma reunião de 20 min com dados validados para a semana seguinte.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MATRIZ PALCOS x NÍVEL DE CONSCIÊNCIA x PIPELINE -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">2. Matriz Estratégica: Palcos, Conteúdos e Funil de Vendas do Parceiro</div>
+      <p class="topic-intro">Saiba exatamente para onde levar seu cliente de acordo com o estágio de maturidade dele e a etapa do seu pipeline:</p>
+
+      <div class="table-responsive">
+        <table class="tactical-table">
+          <thead>
+            <tr>
+              <th>Palco / Espaço</th>
+              <th>Conteúdos & Cases Oficiais</th>
+              <th>Nível de Consciência</th>
+              <th>Etapa no Pipeline</th>
+              <th>Atuação do Vendedor Parceiro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Palco Principal</strong></td>
+              <td>Keynotes com visão de futuro, escala e grandes marcas (Roberto, Serginho C&A, YDUQS, Brain, Inter, Bradesco).</td>
+              <td><strong>Inconsciente</strong> (Não enxerga o gargalo)</td>
+              <td><strong>EQL & Oportunidade Válida</strong></td>
+              <td>Provocar visão de mercado na saída do painel e apontar perdas invisíveis na entrada do canal.</td>
+            </tr>
+            <tr>
+              <td><strong>Conversations</strong></td>
+              <td>Trilhas de *Marketing que Responde (e Converte!)*, *Operação* e *CX* (Cases: Itaú + CazéTV, Cogna/Kroton, Ambev).</td>
+              <td><strong>Consciente da Dor</strong> (Perde conversão/fila longa)</td>
+              <td><strong>Assessment</strong> (Diagnóstico)</td>
+              <td>Escuta ativa ao lado do lead, validar as dores debatidas e esboçar a análise de fricção no bloco.</td>
+            </tr>
+            <tr>
+              <td><strong>BlipCon</strong></td>
+              <td>Painéis técnicos e Demos (C&A Carrinho, Vitru/Meta Ads, Energisa, Go Personal, Stilingue, Blip Cred/Arbi).</td>
+              <td><strong>Consciente da Solução</strong> (Avalia arquitetura de IA)</td>
+              <td><strong>Solution Design</strong></td>
+              <td>Mostrar como a arquitetura Blip Studio elimina robôs engessados e exibir demonstrações no smartphone.</td>
+            </tr>
+            <tr>
+              <td><strong>Partner Valley</strong></td>
+              <td>Palco dos Parceiros: Agente de IA com CoPilot (Advanced), *Plug & Play Estratégico* (Digit.ai).</td>
+              <td><strong>Consciente da Oferta</strong> (Vantagem do parceiro)</td>
+              <td><strong>Solution Design & Negotiation</strong></td>
+              <td>Demonstrar como o squad do parceiro acelera a implementação sem custo extra de tecnologia.</td>
+            </tr>
+            <tr>
+              <td><strong>Learning Arena</strong></td>
+              <td>*Agentes de IA e a Estratégia Conversacional* (Vini Castro), rodas de conversa e sessões de aprendizado.</td>
+              <td><strong>Consciente da Aplicação</strong> (Quer ver a prática)</td>
+              <td><strong>Assessment Avançado</strong></td>
+              <td>Participar da roda com o lead, tirar dúvidas de integração e conduzi-lo para o Espaço Blip.</td>
+            </tr>
+            <tr>
+              <td><strong>Espaço Blip</strong></td>
+              <td>**TV 1:** Intelligence<br>**TV 2:** Blip Cred<br>**TV 3:** Studio & Copilot<br>**TV 4:** Marketing<br>**TV 5:** Stilingue<br>**TV 6:** PS & Blip Go</td>
+              <td><strong>Pronto para Decidir</strong> (Avaliando escopo/ROI)</td>
+              <td><strong>Negotiation & Contract Review</strong></td>
+              <td>Sentar nas mesas de apoio, operar a demo no totem, acionar o CPM da Blip e travar a data no calendário.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- O ROTEIRO DE GUIAGEM DO LEAD -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">3. O Roteiro de Guiagem do Lead no Pavilhão (Do Palco à Mesa de Negociação)</div>
+      <p class="topic-intro">Siga estes 4 passos sequenciais para conduzir o visitante do conteúdo à reunião agendada:</p>
+
+      <div class="timeline-container">
+        
+        <div class="timeline-card cobalt">
+          <div class="timeline-header">
+            <span class="timeline-day">1️⃣ Passo 1: Mapeamento de Interesse no Auditório</span>
+            <span class="timeline-badge" style="background:#DBEAFE; color:#1E40AF;">Auditório / Palestra</span>
+          </div>
+          <div class="concept-box">
+            Assista ao painel relevante ao lado do seu prospect. Observe os slides em que ele tira fotos do telão ou faz anotações. Essa será a sua porta de entrada para a conversa na saída.
+          </div>
+        </div>
+
+        <div class="timeline-card warning">
+          <div class="timeline-header">
+            <span class="timeline-day">2️⃣ Passo 2: Transição para a Prática nos Corredores</span>
+            <span class="timeline-badge">Conexão Imediata</span>
+          </div>
+          <div class="concept-box">
+            Na saída da palestra, faça uma pergunta provocativa conectada ao palco: <em>"O palestrante mostrou como o Blip Studio resolveu a fila no WhatsApp da [Empresa do Palco]. Como a sua operação lida com esse transbordo hoje? Vamos ali no totem ver como isso roda ao vivo?"</em>
+          </div>
+        </div>
+
+        <div class="timeline-card success">
+          <div class="timeline-header">
+            <span class="timeline-day">3️⃣ Passo 3: Experiência Imersiva no Espaço Blip</span>
+            <span class="timeline-badge" style="background:#D1FAE5; color:#065F46;">Totem de Demos</span>
+          </div>
+          <div class="concept-box">
+            Conduza o lead até o totem correspondente (TV 1 a TV 6). Abra o notebook ou peça para o especialista demonstrar a jornada conversacional funcionando em tempo real.
+          </div>
+        </div>
+
+        <div class="timeline-card urgent">
+          <div class="timeline-header">
+            <span class="timeline-day">4️⃣ Passo 4: Travar o Avanço na Mesa de Café</span>
+            <span class="timeline-badge" style="background:#FEE2E2; color:#991B1B;">Mesa de Apoio / Café</span>
+          </div>
+          <div class="concept-box">
+            Convide o lead para um café rápido. Puxe o bloco de notas físico, desenhe a comparação de fluxos em 30 segundos e trave a data da próxima reunião de 20 minutos diretamente na agenda do smartphone.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- NOVO ITEM 4: POSTURA, PRESENÇA E MENTALIDADE COMERCIAL EM CAMPO -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">4. Postura, Presença e Mentalidade Comercial em Campo</div>
+      <p class="topic-intro">O sucesso das interações em eventos de grande porte depende da inteligência relacional, da leitura de ambiente e da atitude com que o vendedor se posiciona perante executivos e decisores:</p>
+
+      <div class="accordion-group">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Atitude Anfitriã, Escuta Ativa & Presença Atenta</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Princípio de Conexão Relacional</div>
+              • <strong>Acolhimento sem Pressão Comercial:</strong> Aborde o visitante com curiosidade genuína sobre a rotina dele, e não como quem busca bater meta no corredor.<br>
+              • <strong>Pausa de Absorção (2 Segundos):</strong> Demonstre que você escutou e processou a dor antes de responder. Isso transmite maturidade e senioridade imediata.<br>
+              • <strong>Contato Visual e Disposição Corporal:</strong> Mantenha ombros abertos, credencial visível e postura ereta. Evite cruzar braços ou parecer desatento.
+            </div>
+            <div class="practice-box">
+              <div class="box-label">💬 Atitude em Prática</div>
+              "Em vez de tentar vender na primeira frase, o vendedor atua como um facilitador do evento: acolhe o convidado, entende em qual painel ele estava e introduz provocações inteligentes sobre a operação dele com serenidade."
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Adaptabilidade de Discurso & Inteligência de Contexto</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Leitura de Perfil Comercial</div>
+              • <strong>Para C-Level / Diretores:</strong> Discurso focado em retorno sobre investimento, velocidade de go-live, mitigação de riscos e visão de mercado.<br>
+              • <strong>Para Gerentes de Operações / CX:</strong> Foco na redução de fricção na entrada, eliminação de filas no WhatsApp e transbordo inteligente ao humano.<br>
+              • <strong>Para Lideranças de TI:</strong> Foco em governança de dados, APIs abertas, segurança e integração ao CRM/ERP existente.
+            </div>
+            <div class="exception-box">
+              <div class="box-label">⚠️ Calibragem de Linguagem</div>
+              Substitua jargões técnicos excessivos por conceitos de negócio claros. O tom deve transmitir autoridade consultiva e respeito ao tempo do executivo.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Gestão de Energia, Resiliência e Autocontrole em Eventos</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Consistência do Início ao Fim do Dia</div>
+              • <strong>Resistência à Fadiga de Campo:</strong> Mantenha o mesmo nível de entusiasmo e profissionalismo às 17h que você demonstrou às 9h da manhã.<br>
+              • <strong>Desarme de Objeções sem Defensividade:</strong> Diante de críticas ou ceticismo do prospect, nunca argumente com agressividade. Acolha com empatia, isole o assunto e convide para um diagnóstico calmo no café.<br>
+              • <strong>Disciplina de Próximo Passo:</strong> Não encerre nenhuma conversa qualificada sem travar uma data de retorno ou compromisso de agenda na tela do celular.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">Hub do Parceiro · Metodologia Event-Led Sales para o Blip id</footer>
+  </div>
+
+
+  <!-- ================================================================= -->
+  <!-- ABA 3: ATUAÇÃO PRESENCIAL (COM CHECKLIST & CARDS REVISADOS + HAPPY HOUR) -->
+  <!-- ================================================================= -->
+  <div class="tab-pane" id="tab-pane-3">
+    <header class="header">
+      <div class="header-tag">Guia do Parceiro · Ferramenta de Campo</div>
+      <h1>Matriz de Atuação Presencial</h1>
+      <p>Consulte antes, durante e após o evento. Cada card traz a ação certa para o momento certo — orientando a atuação da equipe comercial do parceiro com máxima autoridade.</p>
+    </header>
+
+    <div class="cc-banner">
+      <div class="cc-banner-icon">⭐</div>
+      <div>
+        <div class="cc-banner-label">Mentalidade do Evento</div>
+        <div class="cc-banner-text">O Blip id existe para o cliente — não para as equipes internas. <strong>Customer Centricity</strong> é o princípio que orienta cada decisão no evento: onde você está, com quem fala e como responde. O cliente à sua frente é a única prioridade.</div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO DE PREPARAÇÃO PRÉVIA -->
+    <section class="topic-block">
+      <div class="pane-title">1. Preparação Prévia: O Que Fazer Antes para Garantir um Pós-Evento de Sucesso</div>
+      <p class="topic-intro">A atuação presencial só se converte em vendas se a preparação prévia for impecável. Siga os 5 passos fundamentais antes de pisar no pavilhão:</p>
+
+      <div class="accordion-group">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Roteiro de Preparação Técnica & Operacional Pré-Evento</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 5 Passos de Preparação Obrigatória</div>
+              1. <strong>Briefing de Alinhamento com o CPM:</strong> Faça uma sessão de 15 minutos com o seu Channel Partner Manager para alinhar quais clientes estratégicos e contas enterprise confirmaram presença.<br>
+              2. <strong>Demonstração de Bolso Pronta:</strong> Adicione alguns Contatos Inteligentes de clientes no seu smartphone com um fluxo conversacional de exemplo pronto para exibir em 30 segundos no corredor.<br>
+              3. <strong>Bloco Físico & Caneta:</strong> O desenho de arquitetura exige bloco e caneta no bolso. Não confie apenas no celular — desenhar no papel ao vivo gera autoridade imediata.<br>
+              4. <strong>Meta de Reuniões por Vendedor:</strong> Estabeleça a meta do dia (ex: sair do evento com no mínimo 5 reuniões e 1 hora travadas na agenda para a semana seguinte).<br>
+              5. <strong>Crachá & Credenciamento Adiantado:</strong> Chegue 30 minutos antes do horário de pico para pegar a credencial e circular pelo mapa antes da abertura dos portões.
+            </div>
+
+            <div class="checklist-group" style="margin-top: 14px;">
+              <div class="box-label" style="color: var(--navy); font-weight:800; font-family:'Lexend', sans-serif;">📋 Checklist de Campo para o Vendedor do Parceiro</div>
+              <label class="check-item"><input type="checkbox"> Alinhei a lista de convidados e clientes confirmados com o meu CPM</label>
+              <label class="check-item"><input type="checkbox"> Adicionei alguns Contatos Inteligentes de clientes no meu smartphone para demonstração rápida</label>
+              <label class="check-item"><input type="checkbox"> Levo bloco de notas físico e caneta no bolso para desenhos de arquitetura</label>
+              <label class="check-item"><input type="checkbox"> Defini a meta de 5 reuniões e 1 hora travadas na agenda para a semana seguinte</label>
+              <label class="check-item"><input type="checkbox"> Salvei a localização dos pontos de café, totens de demos e Happy Hour do pavilhão</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS DE ATUAÇÃO EM CAMPO -->
+    <section class="filter-section" style="margin-top: 24px;">
+      <div class="filter-header-flex">
+        <div class="filter-title">2. Situações de Campo — Filtrar por momento no evento</div>
+        <button class="reset-btn" id="t1-reset-btn" onclick="t1_resetAllFilters()">Limpar filtros</button>
+      </div>
+      <div class="chips" id="t1-location-chips">
+        <button class="chip active" data-filter="all">Todos</button>
+        <button class="chip" data-filter="fila">Filas & Café</button>
+        <button class="chip" data-filter="arena">Corredores & Arena</button>
+        <button class="chip" data-filter="estande">Espaço Blip & Estande</button>
+        <button class="chip" data-filter="auditorio">Plenárias & Palestras</button>
+        <button class="chip" data-filter="happyhour">Happy Hour & Encerramento</button>
+      </div>
+    </section>
+
+    <main class="grid" id="t1-trigger-grid"></main>
+    <footer class="footer">Hub do Parceiro · Atuação Presencial em Eventos</footer>
+  </div>
+
+  <!-- MODAL ABA 3 -->
+  <div class="modal-overlay" id="t1-modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close" onclick="t1_closeModal()">&times;</button>
+      <div class="modal-header">
+        <div class="modal-situation" id="t1-m-situation">SITUAÇÃO</div>
+        <div class="modal-title" id="t1-m-title">Título</div>
+      </div>
+      <div class="modal-zone-action">
+        <div class="zone-label blue">💬 Sugestão de fala</div>
+        <div class="script-box" id="t1-m-script"></div>
+        <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 6px;" id="t1-m-action-bullets"></div>
+      </div>
+      <div class="modal-zone-care">
+        <div class="zone-label green">🧠 Por que funciona</div>
+        <div class="why-text" style="color: var(--navy); margin-bottom: 14px;" id="t1-m-psychology"></div>
+        <div class="zone-label" style="color: var(--navy); font-family: 'Lexend', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">⚠️ Cuidados</div>
+        <div class="care-row">
+          <div class="care-box"><strong>Evite</strong><span id="t1-m-avoid"></span></div>
+          <div class="care-box"><strong>Exceção</strong><span id="t1-m-exception"></span></div>
+        </div>
+      </div>
+      <div class="modal-zone-gold">
+        <div class="gold-label">✨ Dica de ouro</div>
+        <div class="gold-text" id="t1-m-reflect"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================================================================= -->
+  <!-- ABA 4: RESPOSTAS RÁPIDAS -->
+  <!-- ================================================================= -->
+  <div class="tab-pane" id="tab-pane-4">
+    <header class="header cobalt-theme">
+      <div class="header-tag">Guia do Parceiro · Guia de Campo</div>
+      <h1>Matriz de Respostas Rápidas para Vendedores Parceiros</h1>
+      <p>Scripts e táticas de contorno focadas na realidade das equipes comerciais de nossos parceiros — como posicionar o valor do parceiro, contornar objeções e acelerar negócios no evento.</p>
+    </header>
+
+    <div class="cc-banner">
+      <div class="cc-banner-icon">⭐</div>
+      <div>
+        <div class="cc-banner-label">Mentalidade do Vendedor Parceiro</div>
+        <div class="cc-banner-text">Sua oferta combina a liderança tecnológica da Blip com o atendimento consultivo e especializado da sua empresa. <strong>Customer Centricity</strong> é o segredo: mostre como a parceria entrega a solução completa sem fricção.</div>
+      </div>
+    </div>
+
+    <section class="filter-section">
+      <div class="filter-header-flex">
+        <div class="filter-title">Filtrar por cenário de atendimento</div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span class="filter-saved-msg" id="t2-filter-saved-msg"></span>
+          <button class="reset-btn" id="t2-reset-btn" onclick="t2_resetAllFilters()">Limpar filtros</button>
+        </div>
+      </div>
+
+      <div class="chips" id="t2-filter-chips">
+        <button class="chip active-cobalt" data-filter="todos">Todos</button>
+        <button class="chip" data-filter="parceria">Parceiro vs Blip</button>
+        <button class="chip" data-filter="criticas">Situações Críticas</button>
+        <button class="chip" data-filter="detrator">Cliente Insatisfeito</button>
+        <button class="chip" data-filter="preco">Preço & Desconto</button>
+        <button class="chip" data-filter="clevel">C-Level Inesperado</button>
+        <button class="chip" data-filter="infosec">InfoSec & Concorrência</button>
+        <button class="chip" data-filter="tecnico">Dúvidas Técnicas & Integração</button>
+      </div>
+    </section>
+
+    <main class="grid" id="t2-trigger-grid"></main>
+    <footer class="footer">Hub do Parceiro · Matriz de Respostas Rápidas</footer>
+  </div>
+
+  <!-- MODAL ABA 4 -->
+  <div class="modal-overlay" id="t2-modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close" onclick="t2_closeModal()">&times;</button>
+      <div class="modal-header">
+        <div class="modal-situation cobalt" id="t2-m-situation"></div>
+        <div class="modal-title" id="t2-m-title"></div>
+      </div>
+      <div class="modal-zone-action">
+        <div class="how-box" id="t2-m-quick-action"></div>
+        <div class="posture-box" style="margin-top: 10px;" id="t2-m-action"></div>
+        <div class="zone-label blue" style="margin-top: 16px;">💬 Sugestão de fala</div>
+        <div class="script-box cobalt">
+          <span id="t2-m-script"></span>
+          <button class="copy-btn" id="t2-modal-copy-btn">Copiar Frase</button>
+        </div>
+      </div>
+      <div class="modal-zone-care">
+        <div class="zone-label green">🧠 Por que funciona</div>
+        <div class="why-text" id="t2-m-psychology"></div>
+        <div class="zone-label" style="color: var(--navy); font-family:'Lexend', sans-serif; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">⚠️ Cuidados</div>
+        <div class="care-row">
+          <div class="care-box"><strong>Evite</strong><span id="t2-m-avoid"></span></div>
+          <div class="care-box"><strong>Contexto & Exceção</strong><span id="t2-m-contexts"></span></div>
+        </div>
+      </div>
+      <div class="modal-zone-gold">
+        <div class="gold-label">✨ Dica de ouro</div>
+        <div class="gold-text" id="t2-m-reflect"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================================================================= -->
+  <!-- ABA 5: PLAYBOOK TÁTICO COMERCIAL -->
+  <!-- ================================================================= -->
+  <div class="tab-pane" id="tab-pane-5">
+    <header class="header cobalt-theme">
+      <div class="header-tag">Guia do Parceiro · Guia Metodológico</div>
+      <h1>Playbook Tático Comercial do Parceiro</h1>
+      <p>Ensino comercial, postura consultiva e ferramentas práticas de conversa para os profissionais do time parceiro durante o Blip id.</p>
+    </header>
+
+    <div class="cc-banner">
+      <div class="cc-banner-icon">⭐</div>
+      <div>
+        <div class="cc-banner-label">Mentalidade de Parceria</div>
+        <div class="cc-banner-text">O time parceiro atua com foco absoluto no cliente. A qualidade do diagnóstico conversacional se traduz diretamente em resultado e fechamento de novos projetos.</div>
+      </div>
+    </div>
+
+    <!-- TÓPICO 1 -->
+    <section class="topic-block">
+      <div class="pane-title">1. Dicionário de Autoridade & Postura Consultiva</div>
+      <p class="topic-intro">Substituímos termos genéricos de vendas por linguagem de arquitetura e escuta ativa com intenção genuína, transmitindo senioridade do time parceiro.</p>
+
+      <div class="accordion-group">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Vício de Linguagem vs. Palavras de Poder</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Diretriz de Vocabulário do Parceiro</div>
+              Elimine clichês ultrapassados. Use termos que estimulam o raciocínio e posicionam você como um consultor seguro de tecnologia conversacional.
+            </div>
+            
+            <div class="table-responsive">
+              <table class="tactical-table">
+                <thead>
+                  <tr>
+                    <th>Termo Banalizado (Evitar)</th>
+                    <th>Palavra de Poder (Adotar)</th>
+                    <th>Impacto na Percepção</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color:#DC2626; font-weight:700;">Bot / Chatbot</td>
+                    <td style="color:var(--brand-blue); font-weight:800;">Contato Inteligente / Agente Autônomo</td>
+                    <td>Muda o foco de "responder mensagem" para execução de jornadas ativas.</td>
+                  </tr>
+                  <tr>
+                    <td style="color:#DC2626; font-weight:700;">Transformação Digital</td>
+                    <td style="color:var(--brand-blue); font-weight:800;">Arquitetura Conversacional</td>
+                    <td>Move a conversa de abstração vaga para construção de estrutura real.</td>
+                  </tr>
+                  <tr>
+                    <td style="color:#DC2626; font-weight:700;">Otimizar / Eficiência</td>
+                    <td style="color:var(--brand-blue); font-weight:800;">Orquestrar Jornadas / Feedback Loops</td>
+                    <td>Demonstra controle operacional e evolução contínua guiada por dados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="practice-box" style="margin-top:10px;">
+              <div class="box-label">💬 Como soa na prática</div>
+              "Em vez de apenas colocar um bot tradicional no canal, o que nossa equipe de parceria tem implementado com sucesso é orquestrar a jornada criando agentes de IA no Blip Studio para automação em tempo real."
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Rapport de Desafio, Escuta Ativa & Governança</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Conceito & Mecânica</div>
+              Aproximação real nasce do respeito profissional. Executivos respeitam quem escuta com atenção e aponta um ponto cego com embasamento. Use pausas de 2 segundos e sumarização das dores.
+            </div>
+            <div class="practice-box">
+              <div class="box-label">💬 Como soa na prática</div>
+              "Pelo que você me descreveu, parece que a maior fricção da sua equipe hoje não é atrair pessoas para o WhatsApp, mas a demora para transbordar ao atendente humano quando a dúvida fica complexa... Faz sentido?"
+            </div>
+            <div class="exception-box">
+              <div class="box-label">⚠️ Governança & Alinhamento Comercial</div>
+              Se perguntarem sobre condições contratuais específicas no meio do corredor, responda com serenidade: <em>"Por alinhamento de governança entre a Blip e o nosso time parceiro, analisamos esses números com calma em um diagnóstico dedicado. Mas onde está seu principal gargalo hoje?"</em>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">2. Os 4 Pilares do Ensino Comercial</div>
+      <p class="topic-intro">A lealdade do cliente nasce na qualidade da conversa. O papel do parceiro é ser altamente instrutivo nos primeiros minutos de diálogo.</p>
+
+      <div class="accordion-group">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Pilar 1 & 2: Visões do Setor e Pontos Cegos</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Conceito & Mecânica</div>
+              <strong>Pilar 1 (Visão Única):</strong> Traga tendências e dados do setor que o cliente ainda não enxergou.<br>
+              <strong>Pilar 2 (Pontos Cegos):</strong> Substitua perguntas genéricas por alertas sobre fricções invisíveis e perda de receita.
+            </div>
+            <div class="practice-box">
+              <div class="box-label">💬 Como soa na prática</div>
+              "Conversando com outros diretores do seu setor, notamos que a maioria foca só no custo da mensagem, mas o ponto cego real é a perda de conversão por falta de automação na entrada. Como vocês lidam com esse transbordo hoje?"
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Pilar 3 & 4: Navegar Alternativas e Evitar Armadilhas</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Conceito & Mecânica</div>
+              <strong>Pilar 3 (Navegar Alternativas):</strong> Ajude o cliente a organizar o ruído sobre IA, explicando a diferença entre um bot engessado e agentes autônomos de IA.<br>
+              <strong>Pilar 4 (Evitar Armadilhas):</strong> Alerte sobre riscos comuns (falta de governança, robôs travados, custos ocultos de manutenção).
+            </div>
+            <div class="practice-box">
+              <div class="box-label">💬 Como soa na prática</div>
+              "Com tanta novidade em IA, vemos muitas marcas confusas. A maior armadilha é tentar implementar robôs isolados sem conexão com o CRM. O caminho mais eficiente que desenhamos com nossos clientes é usar o Blip Studio para triar antes do atendimento humano."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">3. Ferramentas Visuais de Conversa (Desenho em Bloco)</div>
+      <p class="topic-intro">Apoiar a explicação em um desenho simples no papel fixa a atenção do cliente e materializa a proposta do time parceiro.</p>
+
+      <div class="accordion-group">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Desenho Rápido no Bloco de Notas</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Conceito & Execução</div>
+              Puxe um bloco de notas físico e uma caneta. Em vez de abrir apresentações complexas, desenhe a mão a diferença entre o fluxo atual do cliente e a solução proposta pelo time parceiro.
+            </div>
+
+            <div class="napkin-canvas">
+              <div class="napkin-header">
+                <span>📄 Modelo Visual para Desenhar no Bloco:</span>
+                <span style="font-size: 10px; color: var(--gray-text);">Desenho em 30 segundos</span>
+              </div>
+              <div class="napkin-grid">
+                <div class="napkin-col">
+                  <div class="napkin-col-title bad">❌ Modelo Atual do Cliente</div>
+                  <div class="napkin-flow">
+                    <div class="napkin-step bad-step">Cliente manda "Oi" no WhatsApp</div>
+                    <div class="napkin-arrow">↓</div>
+                    <div class="napkin-step bad-step">Menu em Árvore engessado (1, 2, 3...)</div>
+                    <div class="napkin-arrow">↓</div>
+                    <div class="napkin-step bad-step">Fila de espera longa sem contexto</div>
+                    <div class="napkin-arrow">↓</div>
+                    <div class="napkin-step bad-step">Humano refaz perguntas do zero</div>
+                  </div>
+                </div>
+                <div class="napkin-col">
+                  <div class="napkin-col-title good">✅ Novo Modelo (Arquitetura Blip)</div>
+                  <div class="napkin-flow">
+                    <div class="napkin-step good-step">Cliente manda dúvida livre</div>
+                    <div class="napkin-arrow">↓</div>
+                    <div class="napkin-step good-step">Agente de IA entende intenção no ato</div>
+                    <div class="napkin-arrow">↓</div>
+                    <div class="napkin-step good-step">Resolve demanda simples em segundos</div>
+                    <div class="napkin-arrow">↓</div>
+                    <div class="napkin-step good-step">Transbordo ao humano com histórico</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="practice-box" style="margin-top:12px;">
+              <div class="box-label">💬 Como soa na prática</div>
+              "Puxe uma cadeira aqui 2 minutos. Deixa eu te rabiscar no bloco de notas como o nosso time parceiro simplifica a entrada do seu cliente para ele não ficar preso em fila..."
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Framework 3x3 de Organização do Papo</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Conceito & Estrutura</div>
+              Conclua conversas de alto nível agrupando o raciocínio em 3 blocos:<br>
+              • <strong>3 Dores Mapeadas:</strong> Os gargalos citados pelo cliente.<br>
+              • <strong>3 Soluções da Arquitetura:</strong> Os caminhos da plataforma para apoiar a operação.<br>
+              • <strong>3 Próximos Passos:</strong> O compromisso agendado na agenda, o e-mail de síntese e a validação técnica.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">4. Agendamento Direto & E-mail de Follow-up de Alto Valor</div>
+      <p class="topic-intro">O sucesso presencial se consolida ao travar o compromisso na agenda do celular enquanto a conversa está aquecida.</p>
+
+      <div class="accordion-group">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Armar o Comprador Interno (E-mail de Apoio Pós-Evento)</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Conceito</div>
+              Envie uma mensagem de resumo nas primeiras horas pós-conversa, entregando diagnósticos reais e argumentos sólidos para que o seu contato consiga vender a ideia internamente para a diretoria dele.
+            </div>
+            <div class="practice-box">
+              <div class="box-label">💬 Roteiro de E-mail de Apoio do Parceiro</div>
+              "Assunto: [Sua Empresa Parceira + Blip] Resumo do nosso papo no Blip id + Próximos Passos<br><br>
+              Olá, [Nome]!<br><br>
+              Conforme conversamos na saída do painel, notei que um dos seus maiores desafios na [Empresa do Cliente] é contornar a perda de conversão por falta de automação na entrada do WhatsApp.<br><br>
+              Para te ajudar a levar essa discussão para a sua diretoria, estruturei em um resumo simples os 3 gargalos que rabiscamos no evento e o benchmark do seu setor.<br><br>
+              Conforme alinhamos, deixamos travada nossa conversa de 20 min na próxima terça-feira, às 14h, onde vou te apresentar um caso prático de como resolvemos esse exato ponto.<br><br>
+              Abraços,<br>
+              [Seu Nome] | Time Parceiro"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar E-mail</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">Hub do Parceiro · Melhores Práticas em Eventos Presenciais</footer>
+  </div>
+
+
+  <!-- ================================================================= -->
+  <!-- ABA 6: PRÁTICAS PÓS-EVENTO & TRABALHO COM CPM -->
+  <!-- ================================================================= -->
+  <div class="tab-pane" id="tab-pane-6">
+    <header class="header cobalt-theme">
+      <div class="header-tag">Guia do Parceiro · Aceleração Comercial</div>
+      <h1>Aceleração Comercial, CPM & Práticas Pós-Evento</h1>
+      <p>Como alinhar a atuação entre o vendedor do parceiro e o CPM (Channel Partner Manager) para destravar propostas, realizar cadências completas de follow-up e agendar reuniões comerciais.</p>
+    </header>
+
+    <div class="cc-banner">
+      <div class="cc-banner-icon">🚀</div>
+      <div>
+        <div class="cc-banner-label">A Regra dos 15 Minutos às 48 Horas (Speed-to-Lead)</div>
+        <div class="cc-banner-text">Leads de eventos presenciais esfriam 10x mais rápido do que leads digitais. A taxa de conversão em reunião cai vertiginosamente após 48 horas. A agilidade e o trabalho em dupla com o CPM são os maiores segredos de fechamento do parceiro.</div>
+      </div>
+    </div>
+
+    <!-- TÓPICO 1: ATUAÇÃO CONJUNTA VENDEDOR PARCEIRO + CPM -->
+    <section class="topic-block">
+      <div class="pane-title">1. Como o Vendedor do Parceiro Deve Trabalhar com o CPM para Dar Celeridade</div>
+      <p class="topic-intro">O CPM (Channel Partner Manager) é o seu maior aliado dentro da Blip. Envolva o CPM estrategicamente para acelerar aprovações, validar registros no CRM e transmitir mais peso institucional:</p>
+
+      <div class="accordion-group">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Sincronização Imediata pós-Evento (Batimento de Base em até 12h)</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Passos de Atuação Comercial Conjunta</div>
+              • <strong>Envio da Lista de Contatos Mapeados:</strong> Envie a relação de crachás/cartões coletados para o seu CPM na mesma noite ou manhã seguinte.<br>
+              • <strong>Cruzar com Base Interna Blip:</strong> O CPM verifica no sistema da Blip se a conta já possui histórico comercial, se é uma oportunidade aberta ou se precisa de validação de registro.<br>
+              • <strong>Identificar Necessidade de Apoio Técnico:</strong> Se o prospect exigiu uma integração complexa, o CPM pode acionar um especialista ou arquiteto da Blip para entrar na reunião de acompanhamento.
+            </div>
+            <div class="practice-box">
+              <div class="box-label">💬 Como alinhar com o CPM via WhatsApp</div>
+              "Fala [Nome do CPM]! Saí do Blip id com 4 contas Enterprise muito quentes [Lista de Empresas]. Já montei o e-mail de resumo para elas. Consegue checar o histórico delas no CRM da Blip para vermos se colocamos você em cópia ou marcarmos uma agenda tripartida?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Reunião Tripartida de Fechamento & Aprovações Especiais</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            <div class="concept-box">
+              <div class="box-label">📘 Estratégia de Peso Institucional</div>
+              Para contas C-Level ou propostas de alto valor, convide o CPM da Blip para participar da reunião de follow-up. Ter o especialista do parceiro junto com o gerente da própria Blip dá total garantia de execução e acelera o 'sim' do cliente.
+            </div>
+            <div class="exception-box">
+              <div class="box-label">⚡ Desconto & Condições Especiais Rápidas</div>
+              Se o cliente exigir uma condição comercial diferenciada negociada no evento, não trave a negociação. Acione o CPM no mesmo instante: <em>"Garantimos esse pacote especial de evento se fecharmos o contrato dentro do mês?"</em>. O CPM tem alçada para agilizar essa aprovação.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2: CADÊNCIA DE RECONTATO PÓS-EVENTO -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">2. Cadência Tática Pós-Evento (Linha do Tempo D+0 ao D+10)</div>
+      <p class="topic-intro">Siga a cronologia exata de réguas de contato para não deixar o lead esfriar:</p>
+
+      <div class="timeline-container">
+        
+        <div class="timeline-card cobalt">
+          <div class="timeline-header">
+            <span class="timeline-day">⚡ D+0 (Primeiras 3h a 12h pós-evento) — Registro & Conexão Rápida</span>
+            <span class="timeline-badge" style="background:#DBEAFE; color:#1E40AF;">Velocidade Máxima</span>
+          </div>
+          <div class="concept-box">
+            • Digite todas as notas e dores coletadas no CRM enquanto a memória está fresca.<br>
+            • Adicione o prospect no LinkedIn com nota personalizada.<br>
+            • Envie a lista de prioridades para o seu CPM realizar o batimento de base na Blip.
+          </div>
+        </div>
+
+        <div class="timeline-card urgent">
+          <div class="timeline-header">
+            <span class="timeline-day">📩 D+1 (24 Hours Pós-Evento) — Disparo do E-mail de Síntese + Convite</span>
+            <span class="timeline-badge" style="background:#FEE2E2; color:#991B1B;">Dia Crítico de Reunião</span>
+          </div>
+          <div class="concept-box">
+            • Envie o E-mail de Apoio contendo os 3 pontos de dor mapeados e a solução proposta.<br>
+            • Copie o seu CPM quando a conta for estratégica ou exigir chancela oficial.<br>
+            • Envie a sugestão de reunião para a semana seguinte com duas opções de horários.
+          </div>
+        </div>
+
+        <div class="timeline-card warning">
+          <div class="timeline-header">
+            <span class="timeline-day">📲 D+2 a D+3 — Follow-up 1: Toque de Voz / Validação WhatsApp</span>
+            <span class="timeline-badge">Primeiro Lembrete</span>
+          </div>
+          <div class="concept-box">
+            • Envie mensagem direta ou áudio curto lembrando do e-mail enviado e reforçando as duas opções de horários.
+          </div>
+        </div>
+
+        <div class="timeline-card success">
+          <div class="timeline-header">
+            <span class="timeline-day">📊 D+5 a D+7 — Follow-up 2 e 3: Envio de Case / Pergunta Direta</span>
+            <span class="timeline-badge" style="background:#D1FAE5; color:#065F46;">Geração de Valor</span>
+          </div>
+          <div class="concept-box">
+            • Entregue um estudo de caso do setor do cliente ou faça uma pergunta direta sobre a prioridade do projeto no trimestre.
+          </div>
+        </div>
+
+        <div class="timeline-card" style="border-left-color: #64748B;">
+          <div class="timeline-header">
+            <span class="timeline-day">🚪 D+10 — Mensagem de Breakup Suave (Desengajamento Elegante)</span>
+            <span class="timeline-badge" style="background:#F1F5F9; color:#475569;">Fechamento de Ciclo</span>
+          </div>
+          <div class="concept-box">
+            • Pause os contatos com elegância. Deixe a porta aberta para quando a prioridade do cliente virar, preservando o relacionamento.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TÓPICO 3: MODELOS DE MENSAGENS PÓS-EVENTO (INCLUINDO 3 FOLLOW-UPS E BREAKUP) -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">3. Modelos de Mensagens Pós-Evento (Sequência Completa de Recontato)</div>
+      <p class="topic-intro">Utilize esta régua progressiva de mensagens para lidar com leads que não respondem de primeira:</p>
+
+      <div class="accordion-group">
+        
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Contato Inicial (WhatsApp / E-mail / LinkedIn)</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            
+            <div class="practice-box">
+              <div class="box-label">💬 WhatsApp — Lead Quente (Com foto do rascunho de bloco)</div>
+              "Fala [Nome], tudo bem? Excelente nossa troca ontem no Blip id! Conforme combinamos na saída do pavilhão, tirei foto do rascunho que fizemos sobre a otimização da entrada no seu WhatsApp [anexar foto]. Montei um resumo de 3 pontos para a sua diretoria e deixei na sua caixa de e-mail. Consegue 20 min na Terça às 10h ou Quarta às 14h30 para olharmos esses números?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+            <div class="practice-box">
+              <div class="box-label">💬 E-mail com CPM em Cópia (Chancela Institucional Conjunta)</div>
+              "Assunto: [Sua Empresa + Blip] Resumo do nosso papo no Blip id + Próximos passos [Empresa do Cliente]<br><br>
+              Olá, [Nome]!<br><br>
+              Foi ótimo conversar com você ontem no pavilhão sobre os desafios da [Empresa do Cliente] no atendimento conversacional.<br><br>
+              Conforme alinhamos, estruturei os 3 pontos do nosso diagnóstico:<br>
+              1. Gargalo de transbordo manual na entrada do WhatsApp.<br>
+              2. Necessidade de integrar a jornada ao seu CRM.<br>
+              3. Oportunidade de colocar Agentes de IA Generativa no Blip Studio.<br><br>
+              Estou copiando neste e-mail o [Nome do CPM], Gerente de Parcerias da Blip, que nos apoia com as melhores condições e arquitetura técnica oficial para o seu projeto.<br><br>
+              Podemos reservar 20 minutos virtuais para te apresentar esse plano? Sugiro **Terça-feira às 10h** ou **Quarta-feira às 15h**.<br><br>
+              Abraços,<br>
+              [Seu Nome] | Vendedor Parceiro"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar E-mail</button>
+            </div>
+
+            <div class="practice-box">
+              <div class="box-label">💬 LinkedIn — Conexão no Mesmo Dia</div>
+              "Olá, [Nome]! Foi um prazer te conhecer pessoalmente hoje no Blip id durante o painel. Gostei muito da sua visão sobre a operação da [Empresa]. Vamos manter contato por aqui também!"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Régua de Follow-up (3 Tentativas em Caso de Não Resposta)</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            
+            <div class="practice-box">
+              <div class="box-label">💬 Follow-up 1 (D+2 ou D+3) — Validação Rápida via WhatsApp</div>
+              "Oi [Nome], tudo bem? Sei que a semana pós-evento costuma ser bem movimentada por aí. Conseguiu dar uma olhada no e-mail com a síntese que te mandei? Deixei também o contato do [Nome do CPM], nosso gerente na Blip, em cópia para agilizar qualquer validação técnica. Terça às 10h ou Quarta às 14h30 fica melhor para passarmos por isso?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+            <div class="practice-box">
+              <div class="box-label">💬 Follow-up 2 (D+5) — Envio de Case / Conteúdo do Setor</div>
+              "Olá, [Nome]! Passando rápido por aqui porque lembrei do que você comentou sobre [dor específica do cliente]. Separei esse estudo de caso curto de uma empresa do mesmo setor que reduziu o tempo de espera no WhatsApp em 40% usando o Blip Studio com o nosso time. Te ajuda se eu mandar o resumo por aqui ou preferimos passar por ele em 15 min de reunião na Quinta?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+            <div class="practice-box">
+              <div class="box-label">💬 Follow-up 3 (D+7) — Pergunta Direta de Prioridade do Projeto</div>
+              "Oi [Nome], tudo bem? Imagino que a rotina aí pós-evento tenha mudado as prioridades. Só para eu não ficar te cobrando sem necessidade: a automação da entrada do WhatsApp ainda é uma prioridade para o time neste trimestre ou prefere que a gente retome essa conversa mais para a frente?"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Script</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="t3_toggleAccordion(this)">
+            <div class="accordion-title">Mensagem de Breakup Suave (Desengajamento Elegante)</div>
+            <div class="accordion-icon">▼</div>
+          </div>
+          <div class="accordion-content">
+            
+            <div class="practice-box">
+              <div class="box-label">💬 Breakup Suave (D+10) — Fechamento Elegante & Porta Aberta</div>
+              "Olá, [Nome]! Como não tive seu retorno, imagino que o momento na [Empresa do Cliente] esteja focado em outras prioridades agora — e está tudo bem! Vou assumir que essa conversa não é prioridade imediata e vou pausar meus contatos por aqui para não lotar sua caixa de entrada.<br><br>
+              Se a chave virar por aí e você quiser retomar o desenho da arquitetura conversacional com o nosso time e a Blip, minha porta fica 100% aberta. Um abraço e excelente trabalho por aí!"
+              <br><button class="copy-script-btn" onclick="copyText(this)">📋 Copiar Breakup</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TÓPICO 4: CHECKLIST PÓS-EVENTO -->
+    <section class="topic-block with-separator">
+      <div class="pane-title">4. Checklist Rápido Pós-Evento do Vendedor Parceiro</div>
+      <p class="topic-intro">Acompanhe seu progresso pós-evento para garantir 100% de aproveitamento das oportunidades:</p>
+
+      <div class="checklist-group">
+        <label class="check-item"><input type="checkbox"> Registrei todos os contatos no CRM e enviei a lista ao CPM até 12h pós-evento</label>
+        <label class="check-item"><input type="checkbox"> Enviei foto dos rascunhos de bloco para os prospects nas primeiras 12h</label>
+        <label class="check-item"><input type="checkbox"> Adicionei os decisores no LinkedIn com mensagem contextualizada</label>
+        <label class="check-item"><input type="checkbox"> Disparei os e-mails de apoio copiando o CPM nas contas prioritárias</label>
+        <label class="check-item"><input type="checkbox"> Executei os 3 follow-ups da régua para leads que não responderam de primeira</label>
+        <label class="check-item"><input type="checkbox"> Apliquei a mensagem de breakup suave para pausar contatos com elegância</label>
+        <label class="check-item"><input type="checkbox"> Agendei reuniões tripartidas (Cliente + Vendedor Parceiro + CPM/Blip)</label>
+      </div>
+    </section>
+
+    <footer class="footer">Hub do Parceiro · Práticas Pós-Evento e Aceleração de Vendas</footer>
+  </div>
+
+</div>
+
+<!-- SCRIPTS UNIFICADOS E DINÂMICOS -->
+<script>
+  // CONTROLADOR DE NAVEGAÇÃO DAS ABAS
+  function switchTab(tabIndex) {
+    document.querySelectorAll('.nav-tab-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', idx === (tabIndex - 1));
+    });
+    document.querySelectorAll('.tab-pane').forEach((pane, idx) => {
+      pane.classList.toggle('active', idx === (tabIndex - 1));
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // FUNÇÃO AUXILIAR DE CÓPIA OTIMIZADA
+  function copyText(btnElement) {
+    const parentBox = btnElement.parentElement;
+    const clone = parentBox.cloneNode(true);
+    
+    const btnInClone = clone.querySelector('button');
+    if (btnInClone) btnInClone.remove();
+    
+    const labelInClone = clone.querySelector('.box-label');
+    if (labelInClone) labelInClone.remove();
+    
+    const textToCopy = clone.innerText.trim();
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      const origText = btnElement.innerHTML;
+      btnElement.innerHTML = "✅ Copiado!";
+      setTimeout(() => btnElement.innerHTML = origText, 2000);
+    });
+  }
+
+  // =================================================================
+  // JS ABA 3: ATUAÇÃO PRESENCIAL (PERSPECTIVA DO VENDEDOR PARCEIRO + HAPPY HOUR)
+  // =================================================================
+  const t1_triggers = [
+    {
+      id: 1,
+      situationBadge: "FILAS & CAFÉ",
+      triggerText: "Visitante na fila do café ao seu lado",
+      cardSub: "Transforme o tempo de espera em conexão leve.",
+      location: ["fila"],
+      quickAction: "Ceda a vez na fila com cortesia. Olhe o crachá, identifique a empresa e inicie uma conversa sobre as palestras do dia.",
+      avoidQuick: "Monopolizar mesas com a equipe enquanto convidados procuram lugar.",
+      psychology: "Visitantes avaliam a cultura do time parceiro e da Blip pela atitude espontânea nos momentos de convivência.",
+      bodyLanguage: "Passo para o lado, gesto receptivo com as mãos, contato visual acolhedor.",
+      script: "\"Pode passar na frente! Você é nosso convidado hoje. Aliás, qual palestra você veio acompanhar no pavilhão?\"",
+      exception: "Se o visitante estiver ao telefone ou de fone, respeite o espaço.",
+      reflect: "Você está atuando como anfitrião no evento ou apenas como mais um participante?"
+    },
+    {
+      id: 2,
+      situationBadge: "CORREDORES & ARENA",
+      triggerText: "Sua equipe parceira formando grupo fechado no corredor",
+      cardSub: "Grupos de costas para o corredor bloqueiam conexões.",
+      location: ["arena"],
+      quickAction: "Ao conversar com colegas da sua empresa, mantenha o corpo em semicírculo aberto voltado para o corredor.",
+      avoidQuick: "Ficar em roda fechada de costas para o fluxo de pessoas falando de assuntos internos.",
+      psychology: "A aglomeração de costas cria uma barreira psicológica e o visitante sente que vai interromper.",
+      bodyLanguage: "Sinal discreto para o colega, abra a roda em semicírculo, olhar atento a quem passa.",
+      script: "\"Oi, tudo bem? Procura alguma palestra ou estande específico? Se quiser, te acompanho até lá!\"",
+      exception: "Alinhamento confidencial de negócios? Desloque-se para um local reservado fora do fluxo.",
+      reflect: "Quantas conexões sua equipe pode ter perdido por estar em grupo fechado?"
+    },
+    {
+      id: 3,
+      situationBadge: "CORREDORES & ARENA",
+      triggerText: "Você está circulando entre os palcos do evento",
+      cardSub: "Celular no bolso. Olhos atentos ao ambiente.",
+      location: ["arena"],
+      quickAction: "Ao caminhar pelo pavilhão, guarde o celular no bolso. Cabeça erguida e olhar ativo — você pode estar a 2 metros de um decisor.",
+      avoidQuick: "Caminhar olhando fixamente para a tela do telefone em áreas de circulação.",
+      psychology: "Profissionais no celular transmitem indisponibilidade e perdem oportunidades de aproximação.",
+      bodyLanguage: "Cabeça erguida, braços relaxados, contato visual direto com quem cruza o caminho.",
+      script: "\"Oi! Vi que você esteve no painel de abertura. O que achou dos cases que eles apresentaram no palco?\"",
+      exception: "Precisa responder a um e-mail urgente do CPM? Encoste num totem ou área de apoio.",
+      reflect: "Você está 100% presente no evento ou focado no celular?"
+    },
+    {
+      id: 4,
+      situationBadge: "CORREDORES & ESTANDE",
+      triggerText: "Visitante contando a dor da empresa dele",
+      cardSub: "Faça uma pausa de 2 segundos antes de responder.",
+      location: ["arena", "estande"],
+      quickAction: "Escute atentamente a explicação do cliente. Faça uma pausa de 2 segundos antes de falar para demonstrar absorção genuína.",
+      avoidQuick: "Interromper o visitante para fazer um pitch comercial apressado.",
+      psychology: "Escuta ativa transmite maturidade e posiciona você como um consultor confiável.",
+      bodyLanguage: "Aceno leve com a cabeça, inclinação suave do corpo para a frente enquanto ele fala.",
+      script: "\"Entendo perfeitamente esse gargalo... E como essa dificuldade afeta a rotina da sua equipe de atendimento hoje?\"",
+      exception: "Se o cliente pedir uma resposta objetiva de sim ou não sobre integração, seja direto.",
+      reflect: "Você está ouvindo para entender o cliente ou apenas esperando sua vez de falar?"
+    },
+    {
+      id: 5,
+      situationBadge: "ESPAÇO BLIP & EVENTOS",
+      triggerText: "Visitante buscando um palco ou demonstração",
+      cardSub: "Acompanhe presencialmente — não apenas aponte.",
+      location: ["estande", "auditorio"],
+      quickAction: "Identifique o perfil do participante e caminhe ao lado dele até o espaço ou totem correto do Espaço Blip.",
+      avoidQuick: "Apenas apontar com o dedo de longe onde fica o auditório ou estande.",
+      psychology: "Acompanhar presencialmente demonstra cuidado excepcional e cria 2 minutos de conversa exclusiva.",
+      bodyLanguage: "Caminhe lado a lado, indique as placas de sinalização e faça perguntas leves no caminho.",
+      script: "\"O espaço exato para a demo de IA é o totem 3 no Espaço Blip — fica bem aqui na frente. Vem comigo que te apresento!\"",
+      exception: "Já atendendo um prospect prioritário? Peça a um colega do parceiro para guiar o visitante.",
+      reflect: "Você conhece o mapa do evento para guiar seus convidados com segurança?"
+    },
+    {
+      id: 6,
+      situationBadge: "CORREDORES & ESTANDE",
+      triggerText: "Visitante sozinho, parado ou checando a agenda",
+      cardSub: "Quem está sozinho num evento valoriza ser acolhido.",
+      location: ["arena", "estande"],
+      quickAction: "Ao notar um participante desacompanhado, aproxime-se com simpatia para oferecer orientação sobre as atrações.",
+      avoidQuick: "Ignorar visitantes desacompanhados achando que eles virão espontaneamente até o estande.",
+      psychology: "Visitantes sozinhos costumam se sentir deslocados. Uma abordagem acolhedora é altamente memorável.",
+      bodyLanguage: "Aproximação frontal suave, sorriso sincero e mãos abertas.",
+      script: "\"Olá, seja muito bem-vindo! É sua primeira vez no Blip id? Quer que eu te apresente como estão organizadas as trilhas?\"",
+      exception: "Não aborde quem estiver visivelmente concentrado trabalhando no notebook ou em ligação.",
+      reflect: "Quantos visitantes desacompanhados você pode acolher no dia de hoje?"
+    },
+    {
+      id: 7,
+      situationBadge: "IMAGEM & POSTURA",
+      triggerText: "Sua apresentação pessoal durante o evento",
+      cardSub: "A autoridade da sua empresa começa na postura.",
+      location: ["arena", "estande", "auditorio"],
+      quickAction: "Use dress code Business Casual confortável. Mantenha crachá e credencial visíveis na altura do peito.",
+      avoidQuick: "Credencial virada para trás, roupas amassadas ou postura desleixada.",
+      psychology: "A maturidade do time parceiro é avaliada pelo profissionalismo e postura em campo.",
+      bodyLanguage: "Postura ereta, ombros encaixados e credencial posicionada para fácil leitura de nome e empresa.",
+      script: "\"Oi! Sou da [Sua Empresa], parceira oficial da Blip. Como posso te ajudar a aproveitar o melhor do evento?\"",
+      exception: "Ajuste o tom de formalidade caso esteja lidando com diretoria tradicional de bancos ou setor público.",
+      reflect: "Sua imagem pessoal reflete a autoridade do serviço que sua empresa entrega?"
+    },
+    {
+      id: 8,
+      situationBadge: "ESPAÇO BLIP & ESTANDE",
+      triggerText: "Cliente qualificado conversando no estande",
+      cardSub: "Transforme a estrutura do evento em sala de reunião.",
+      location: ["estande"],
+      quickAction: "Convide o cliente para sentar nas mesas de apoio. Ofereça café, abra o bloco de notas e apresente o desenho do fluxo.",
+      avoidQuick: "Usar as mesas de atendimento do estande como área de descanso da equipe.",
+      psychology: "Oferecer um ambiente confortável e café demonstra respeito ao tempo do executivo.",
+      bodyLanguage: "Puxe a cadeira para o visitante, acomode-o e ofereça água antes de iniciar a conversa de negócios.",
+      script: "\"Vamos sentar ali naquela mesa com mais calma? Tomamos um café enquanto você me conta sobre o projeto de vocês.\"",
+      exception: "Lounge VIP: atente-se às regras de acesso reservado de executivos C-Level.",
+      reflect: "Você está usando a estrutura do estande para gerar relacionamento real e agendamentos?"
+    },
+    {
+      id: 9,
+      situationBadge: "CORREDORES & PLENÁRIAS",
+      triggerText: "Você leu a empresa e o cargo no crachá do lead",
+      cardSub: "Cite dores reais do segmento dele.",
+      location: ["arena", "auditorio"],
+      quickAction: "Leia empresa e cargo discretamente. Conecte sua abertura com um desafio conhecido daquele mercado.",
+      avoidQuick: "Fazer perguntas genéricas sem demonstrar conhecimento do setor do cliente.",
+      psychology: "Demonstrar repertório sobre o mercado do cliente gera autoridade e confiança imediata.",
+      bodyLanguage: "Olhar discreto para o crachá na aproximação, mantendo contato visual direto ao falar.",
+      script: "\"Vi no seu crachá que você é da [Empresa]. Vocês também têm sentido a pressão de acelerar a conversão no WhatsApp?\"",
+      exception: "Não conhece o segmento do cliente? Faça perguntas de curiosidade genuína sobre a operação dele.",
+      reflect: "Você está adaptando a conversa à realidade do segmento do visitante?"
+    },
+    {
+      id: 10,
+      situationBadge: "ENCERRANDO CONVERSAS",
+      triggerText: "Conversa qualificada de campo chegando ao fim",
+      cardSub: "Conversa sem próximo passo = oportunidade perdida.",
+      location: ["estande", "arena"],
+      quickAction: "Antes de se despedir, abra a agenda do celular e trave a data da próxima reunião de 20 minutos para a semana seguinte.",
+      avoidQuick: "Encerrar com frases vagas do tipo 'depois a gente se fala no LinkedIn'.",
+      psychology: "Sair do evento com data e hora marcadas demonstra profissionalismo e reduz o ciclo de vendas.",
+      bodyLanguage: "Abra a agenda no celular na frente do cliente e registre o horário combinado.",
+      script: "\"Foi excelente nossa troca! Para não deixarmos o assunto esfriar: Terça às 10h te mando o resumo e alinhamos 20 min, combinado?\"",
+      exception: "Se o perfil não for ideal para o parceiro, direcione com gentileza para o Blip Go ou canais self-service.",
+      reflect: "Suas conversas presenciais estão se convertendo em compromissos reais de agenda?"
+    },
+    {
+      id: 11,
+      situationBadge: "HAPPY HOUR & ENCERRAMENTO",
+      triggerText: "Aproximação de cliente no Happy Hour do evento",
+      cardSub: "Aproveite o tom leve para consolidar a confiança.",
+      location: ["happyhour", "arena"],
+      quickAction: "Acolha o participante com simpatia no clima de celebração. Troque impressões sobre as melhores palestras e trave a reunião de trabalho para a semana seguinte.",
+      avoidQuick: "Beber em excesso, fazer apresentações comerciais pesadas ou monopolizar o cliente enquanto ele quer socializar.",
+      psychology: "No Happy Hour os decisores baixam a guarda e valorizam conversas agradáveis. Travar a reunião para o dia útil seguinte preserva o tom leve da celebração.",
+      bodyLanguage: "Postura descontraída, sorriso natural, mantendo o profissionalismo e a atenção ao cliente.",
+      script: "\"O dia foi incrível e cheio de conteúdos! Para não tomarmos seu tempo de celebração agora, vamos deixar 20 min alinhados na Terça para passarmos por aquele fluxo de WhatsApp?\"",
+      exception: "Se o cliente quiser falar espontaneamente de projetos no Happy Hour, escute e anote as dores no celular, mas confirme o próximo passo no dia seguinte por e-mail.",
+      reflect: "Você está usando o Happy Hour para construir relacionamento e agendar reuniões ou para se desligar do evento?"
+    },
+    {
+      id: 12,
+      situationBadge: "HAPPY HOUR & ENCERRAMENTO",
+      triggerText: "Conectar com executivos C-Level no encerramento",
+      cardSub: "Seja breve, marcante e focado no próximo passo.",
+      location: ["happyhour", "estande"],
+      quickAction: "Aproxime-se de diretores no ambiente do Happy Hour, parabenize pela presença no evento e proponha uma conversa técnica dedicada na semana seguinte.",
+      avoidQuick: "Pressionar por definições de orçamento ou tentar negociar contratos durante o momento de confraternização.",
+      psychology: "Executivos respeitam quem sabe abordar no tom certo do ambiente, combinando cortesia com foco em agenda profissional.",
+      bodyLanguage: "Aproximação serena, aperto de mão seguro e postura respeitosa.",
+      script: "\"Boa noite, [Nome]! Vi que você acompanhou as plenárias principais hoje. Gostaria de agendar 20 min com o nosso time na próxima semana para te apresentar o benchmark do seu setor. Terça às 11h fica bom?\"",
+      exception: "Caso o executivo esteja acompanhado de familiares ou diretores em conversa privada, aguarde o momento adequado para a abordagem.",
+      reflect: "Você transmitiu senioridade ao abordar decisores no encerramento do evento?"
+    }
+  ];
+
+  let t1_selectedLocations = JSON.parse(localStorage.getItem('op1_locations')) || ["all"];
+
+  function t1_renderGrid() {
+    const grid = document.getElementById("t1-trigger-grid");
+    grid.innerHTML = "";
+    const filtered = t1_triggers.filter(item =>
+      t1_selectedLocations.includes("all") || item.location.some(l => t1_selectedLocations.includes(l))
+    );
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div class="empty-state">Nenhum card encontrado para esse filtro.</div>`;
+      return;
+    }
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.onclick = () => t1_openModal(item.id);
+      card.innerHTML = `
+        <div>
+          <div class="badge-container"><span class="situation-badge">${item.situationBadge}</span></div>
+          <div class="card-trigger">${item.triggerText}</div>
+          <div class="card-sub">${item.cardSub}</div>
+        </div>
+        <div class="card-footer-hint">Ver orientações →</div>
+      `;
+      grid.appendChild(card);
+    });
+    t1_checkResetButtonVisibility();
+  }
+
+  function t1_openModal(id) {
+    const item = t1_triggers.find(t => t.id === id);
+    if (!item) return;
+
+    document.getElementById("t1-m-situation").textContent = item.situationBadge;
+    document.getElementById("t1-m-title").textContent = item.triggerText;
+    document.getElementById("t1-m-script").textContent = item.script;
+    document.getElementById("t1-m-psychology").textContent = item.psychology;
+    document.getElementById("t1-m-exception").textContent = item.exception;
+    document.getElementById("t1-m-avoid").textContent = item.avoidQuick;
+    document.getElementById("t1-m-reflect").textContent = item.reflect;
+
+    const bulletsEl = document.getElementById("t1-m-action-bullets");
+    bulletsEl.innerHTML = "";
+    [item.quickAction, item.bodyLanguage].forEach(text => {
+      const div = document.createElement("div");
+      div.className = "action-bullet";
+      div.textContent = text;
+      bulletsEl.appendChild(div);
+    });
+
+    document.getElementById("t1-modal-overlay").classList.add("open");
+  }
+
+  function t1_closeModal() {
+    document.getElementById("t1-modal-overlay").classList.remove("open");
+  }
+
+  function t1_checkResetButtonVisibility() {
+    const custom = !(t1_selectedLocations.length === 1 && t1_selectedLocations[0] === "all");
+    document.getElementById("t1-reset-btn").classList.toggle("visible", custom);
+  }
+
+  function t1_resetAllFilters() {
+    t1_selectedLocations = ["all"];
+    localStorage.setItem('op1_locations', JSON.stringify(t1_selectedLocations));
+    t1_updateChipGroup("t1-location-chips", t1_selectedLocations);
+    t1_renderGrid();
+  }
+
+  function t1_updateChipGroup(containerId, selectedArray) {
+    document.querySelectorAll(`#${containerId} .chip`).forEach(chip => {
+      chip.classList.toggle("active", selectedArray.includes(chip.dataset.filter));
+    });
+  }
+
+  document.querySelectorAll('#t1-location-chips .chip').forEach(chip => {
+    chip.addEventListener('click', e => {
+      const val = e.currentTarget.dataset.filter;
+      if (val === "all") {
+        t1_selectedLocations = ["all"];
+      } else {
+        const allIdx = t1_selectedLocations.indexOf("all");
+        if (allIdx > -1) t1_selectedLocations.splice(allIdx, 1);
+        const idx = t1_selectedLocations.indexOf(val);
+        if (idx > -1) t1_selectedLocations.splice(idx, 1);
+        else t1_selectedLocations.push(val);
+        if (t1_selectedLocations.length === 0) t1_selectedLocations.push("all");
+      }
+      localStorage.setItem('op1_locations', JSON.stringify(t1_selectedLocations));
+      t1_updateChipGroup("t1-location-chips", t1_selectedLocations);
+      t1_renderGrid();
+    });
+  });
+
+  document.getElementById("t1-modal-overlay").addEventListener("click", e => {
+    if (e.target.id === "t1-modal-overlay") t1_closeModal();
+  });
+
+
+  // =================================================================
+  // JS ABA 4: RESPOSTAS RÁPIDAS (EXEMPLOS PARA VENDEDORES DE PARCEIROS)
+  // =================================================================
+  let t2_currentModalScript = "";
+  const t2_scenarios = [
+    {
+      id: 1,
+      situationBadge: "PARCEIRO VS BLIP",
+      triggerText: "Prospect pergunta se a implementação é feita por vocês ou pela Blip",
+      cardSub: "Posicione o valor do serviço especializado com a tecnologia Blip.",
+      profile: ["land", "expand"],
+      scenario: ["parceria", "tecnico"],
+      script: "\"Nós somos parceiros oficiais da Blip. A Blip entrega a infraestrutura e a inteligência artificial enterprise de ponta, enquanto o nosso time parceiro cuida de toda a arquitetura de negócios, estratégia e implementação personalizada para a sua operação. Você ganha o melhor dos dois mundos: a liderança em tecnologia da Blip com o atendimento focado do nosso time.\"",
+      quickAction: "Responda com orgulho de ser parceiro oficial. Destaque a complementariedade entre produto (Blip) e serviços/estratégia (Sua empresa parceira).",
+      bodyLanguage: "Postura confiante, tom de voz sereno e receptivo.",
+      psychology: "Clientes querem segurança na tecnologia (Blip) e agilidade no atendimento de implementação (Parceiro).",
+      avoidQuick: "Fazer parecer que você compete com a Blip ou inventar que vocês criaram a plataforma.",
+      contexts: "Ideal para abordar em reuniões de estande ou ao apresentar a oferta conjunta no pavilhão.",
+      reflect: "Sua resposta transmite clareza sobre o papel do parceiro na jornada do cliente?"
+    },
+    {
+      id: 2,
+      situationBadge: "VANTAGEM DO PARCEIRO",
+      triggerText: "Prospect questiona por que contratar via parceiro e não direto com a Blip",
+      cardSub: "Destaque a agilidade de entrega, proximidade e especialização no setor dele.",
+      profile: ["land"],
+      scenario: ["parceria", "preco", "clevel"],
+      script: "\"Ao fechar através do nosso time parceiro, você conta com a exata mesma tecnologia enterprise e precificação da Blip, mas com a vantagem de ter um squad dedicado ao seu setor para acelerar o time-to-market. A gente desenha a jornada sob medida, integra com seu CRM e garante acompanhamento próximo de evolução contínua.\"",
+      quickAction: "Mostre que a contratação via parceiro agrega valor consultivo sem custo adicional na tecnologia.",
+      bodyLanguage: "Gesto de abertura com as mãos, olhar seguro e direto.",
+      psychology: "Executivos querem saber se vão receber atendimento de boutique com tecnologia de gigante.",
+      avoidQuick: "Criticar o suporte direto da Blip; prefira enfatizar a proximidade extra do seu time.",
+      contexts: "Excelente para desarmar comparações contratuais na mesa de atendimento.",
+      reflect: "Você consegue deixar clara a proposta de valor do parceiro em menos de 30 segundos?"
+    },
+    {
+      id: 3,
+      situationBadge: "PREÇO & DESCONTO",
+      triggerText: "Alguém pede estimativa de preço ou desconto no corredor",
+      cardSub: "Estimativa no corredor gera erro — conduza para o diagnóstico.",
+      profile: ["land", "expand", "others"],
+      scenario: ["preco"],
+      script: "\"Conversar sobre preço no meio do corredor costuma dar errado porque depende da volumetria e arquitetura da sua operação. Se nossa solução cortar 30% do tempo de atendimento no WhatsApp, o projeto se paga no primeiro trimestre. Vamos agendar 30 minutos para analisar esses números com calma?\"",
+      quickAction: "Responda com tom calmo e transparente, explicando que precificar exige avaliar a arquitetura da operação.",
+      bodyLanguage: "Postura descontraída, tom firme, pausado e sem atitude defensiva.",
+      psychology: "Executivos pedem estimativas no corredor para testar a maturidade e governança comercial do parceiro.",
+      avoidQuick: "Fornecer estimativas financeiras informais ou chutes no meio da feira.",
+      contexts: "Conduzir às mesas de atendimento ou agendar reunião síncrona dedicada.",
+      reflect: "Você está ajudando o cliente a enxergar o valor de negócio ou reduzindo o papo a preço?"
+    },
+    {
+      id: 4,
+      situationBadge: "INTEGRAÇÃO TÉCNICA",
+      triggerText: "Prospect pergunta se vocês integram com ERP/CRM (SAP, Salesforce, VTEX, TOTVS)",
+      cardSub: "Demonstre capacidade técnica de integração do parceiro.",
+      profile: ["others", "land"],
+      scenario: ["tecnico", "parceria"],
+      script: "\"Com certeza! A plataforma Blip é totalmente aberta via APIs e webhooks, e a nossa equipe especializada em integração conecta a jornada conversacional diretamente ao seu CRM ou ERP em tempo real. Cada interação no WhatsApp alimenta seu banco de dados e atualiza o histórico do cliente automaticamente.\"",
+      quickAction: "Afirme com clareza a capacidade de integração do ecossistema e cite casos reais onde seu time conectou sistemas legados.",
+      bodyLanguage: "Aceno positivo imediato de cabeça, tom firme e técnico.",
+      psychology: "Diretores de TI e Operações temem sistemas isolados que não conversam com o CRM atual.",
+      avoidQuick: "Inventar integrações prontas se for um sistema proprietário desconhecido; garanta que é possível via API.",
+      contexts: "Aplica-se em conversas com CTOs, VPs de Tecnologia ou Gerentes de TI no pavilhão.",
+      reflect: "Você passou a segurança necessária sobre a inteligência de dados integrada?"
+    },
+    {
+      id: 5,
+      situationBadge: "EXPERIÊNCIA DE NICHO",
+      triggerText: "Prospect pergunta se o time parceiro atende o setor específico dele",
+      cardSub: "Valide o conhecimento vertical da sua empresa com casos do setor.",
+      profile: ["land", "expand"],
+      scenario: ["clevel", "parceria"],
+      script: "\"Sim, temos expertise comprovada no seu segmento. Sabemos que os maiores gargalos do seu setor hoje estão em [citar dor do nicho, ex: tempo de transbordo no checkout / retenção de leads]. A gente combina o conhecimento das regras do seu mercado com a tecnologia Blip para gerar resultado imediato. Vamos alinhar 20 min para eu te mostrar esse case?\"",
+      quickAction: "Conecte a resposta a um problema real do setor dele para demonstrar autoridade imediata do parceiro.",
+      bodyLanguage: "Inclinação do corpo para a frente, contato visual focado e seguro.",
+      psychology: "Clientes se sentem mais seguros contratando parceiros que já entendem as dores específicas do seu mercado.",
+      avoidQuick: "Usar respostas genéricas do tipo 'atendemos todos os segmentos da mesma forma'.",
+      contexts: "Útil para abordagem direta a executivos em estandes temáticos.",
+      reflect: "Sua fala demonstrou autoridade sobre o segmento específico do prospect?"
+    },
+    {
+      id: 6,
+      situationBadge: "OUTRA AGÊNCIA / FERRAMENTA",
+      triggerText: "Prospect diz que já trabalha com outro parceiro ou ferramenta de bot",
+      cardSub: "Não critique a ferramenta dele. Provoque o resultado e a escala.",
+      profile: ["land", "expand"],
+      scenario: ["parceria", "tecnico"],
+      script: "\"Que ótimo que vocês já utilizam canais digitais! A questão é: o modelo atual de vocês consegue usar IA Generativa com governança ou ainda fica preso em menus engessados de digite 1 e 2? O nosos time parceiro entra justamente para migrar sua estrutura para o Blip Studio com agentes autônomos de alta conversão.\"",
+      quickAction: "Valide a maturidade dele por já ter algo rodando e direcione o foco para o salto de qualidade com a parceria Blip.",
+      bodyLanguage: "Sorriso de aprovação, tom construtivo e sem rivalidade.",
+      psychology: "Criticar o fornecedor atual gera defensividade no cliente. Mostrar a evolução tecnológica gera curiosidade.",
+      avoidQuick: "Falar mal da agência atual dele ou desmerecer o investimento feito no passado.",
+      contexts: "Ideal para conversas em corredores ou na saída de palestras sobre inovação.",
+      reflect: "Você ajudou o cliente a perceber a limitação da solução atual dele de forma elegante?"
+    },
+    {
+      id: 7,
+      situationBadge: "SUPORTE PÓS-PROJETO",
+      triggerText: "Prospect pergunta quem faz a sustentação e evolução após o go-live",
+      cardSub: "Transmita segurança com o acompanhamento contínuo do parceiro.",
+      profile: ["expand", "others"],
+      scenario: ["tecnico", "parceria"],
+      script: "\"Nosso compromisso não acaba na entrega da solução. O nosso time parceiro mantém um acompanhamento contínuo de Customer Success e inteligência de dados, ajustando as personas dos agentes de IA e analisando taxas de retenção todo mês para garantir que seu canal continue escalando retorno sobre o investimento.\"",
+      quickAction: "Enfatize a sustentação de longo prazo e a melhoria contínua oferecida pelo parceiro.",
+      bodyLanguage: "Mãos abertas, tom acolhedor e profissional.",
+      psychology: "O maior medo de quem contrata projetos de IA é ficar desassistido após a implementação.",
+      avoidQuick: "Prometer SLA ou suporte 24/7 sem alinhar previamente a oferta de serviço do seu time.",
+      contexts: "Perfeito para fechar conversas com tomadores de decisão operacionais.",
+      reflect: "Você passou a tranquilidade de que o cliente terá suporte especializado contínuo?"
+    },
+    {
+      id: 8,
+      situationBadge: "INFOSEC & CONCORRENTE",
+      triggerText: "Alguém sondando dados internos ou tabelas de preços do parceiro",
+      cardSub: "Preserve a governança das informações comerciais.",
+      profile: ["others", "land", "expand"],
+      scenario: ["infosec"],
+      script: "\"Informações detalhadas de precificação e roadmap a gente trata sob alinhamento direto e NDA, por questão de governança institucional da empresa. Mas posso te garantir que o foco da nossa arquitetura é agentes autônomos. Como vocês têm lidado com essa parte por aí?\"",
+      quickAction: "Mantenha a serenidade, reforce a governança do parceiro e inverta a pergunta para a operação do interlocutor.",
+      bodyLanguage: "Guarde o celular, mantenha postura ereta e tom institucional sereno.",
+      psychology: "Demonstrar governança e sigilo comercial reforça o profissionalismo e a senioridade do parceiro.",
+      avoidQuick: "Exibir dados internos ou tabelas de margem em telas públicas.",
+      contexts: "Restrição absoluta sobre exibição de relatórios internos no pavilhão.",
+      reflect: "Você está garantindo a proteção das informações estratégicas da sua empresa?"
+    },
+    {
+      id: 9,
+      situationBadge: "CLIENTE DETRATOR",
+      triggerText: "Cliente insatisfeito reclamando de um projeto antigo no estande",
+      cardSub: "Valide antes de explicar. Acolha com responsabilidade.",
+      profile: ["expand", "others"],
+      scenario: ["detrator", "criticas"],
+      script: "\"Te entendo perfeitamente, [Nome], e você está coberto de razão em trazer isso. Não vou te dar uma desculpa de corredor. Vamos ali tomar um café? Vou acionar a liderança do nosso time parceiro para entendermos o histórico e sair daqui com um plano de ação resolvido.\"",
+      quickAction: "Ofereça acolhimento emocional imediato, escute atenciosamente sem dar desculpas e isole a conversa em um ambiente calmo.",
+      bodyLanguage: "Contato visual empático, inclinação do corpo para a frente para escuta ativa.",
+      psychology: "Clientes insatisfeitos precisam de validação emocional sincera antes de escutarem soluções.",
+      avoidQuick: "Dar justificativas rasas ou culpar a Blip/terceiros no meio do evento.",
+      contexts: "Isolar em uma área calma de convivência e acionar o responsável da conta no mesmo instante.",
+      reflect: "Sua postura está transmitindo responsabilidade ou criando defensividade?"
+    },
+    {
+      id: 10,
+      situationBadge: "C-LEVEL & AUDITÓRIO",
+      triggerText: "Executivo saindo de palestra reflexivo sobre IA",
+      cardSub: "Conecte o conteúdo do palco à oferta do parceiro.",
+      profile: ["land"],
+      scenario: ["clevel"],
+      script: "\"Vi você saindo do painel de IA. O palestrante comentou sobre automação e governança no varejo; como a estrutura da sua empresa está lidando com essa transição do modelo antigo hoje? O nosso time parceiro tem ajudado marcas a virar essa chave rápido.\"",
+      quickAction: "Intercepte o executivo na saída citando um insight do palco e conectando com a expertise do parceiro.",
+      bodyLanguage: "Aproximação respeitosa na saída do auditório, mantendo contato visual direto.",
+      psychology: "Executivos saem das palestras reflexivos e receptivos a conversas inteligentes sobre como aplicar os aprendizados.",
+      avoidQuick: "Fazer abordagens comerciais genéricas do tipo 'quer conhecer a nossa agência?'.",
+      contexts: "Aplicável na saída de plenárias e painéis temáticos no pavilhão.",
+      reflect: "De que maneira você pode conectar o tema do palco com a solução do parceiro?"
+    }
+  ];
+
+  const t2_CRITICAS_IDS = [1, 2, 8, 9];
+  let t2_activeFilters = JSON.parse(localStorage.getItem('pocket_filters_simple')) || ["todos"];
+
+  function t2_renderGrid() {
+    const grid = document.getElementById("t2-trigger-grid");
+    grid.innerHTML = "";
+
+    let filtered;
+    if (t2_activeFilters.includes("todos")) {
+      filtered = [...t2_scenarios];
+    } else {
+      filtered = t2_scenarios.filter(item => {
+        return t2_activeFilters.some(filterKey => {
+          if (filterKey === "criticas") {
+            return t2_CRITICAS_IDS.includes(item.id) || item.scenario.includes("criticas");
+          }
+          return item.scenario.includes(filterKey);
+        });
+      });
+    }
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div class="empty-state">Nenhum cenário encontrado para os filtros selecionados.</div>`;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card cobalt-border";
+      card.onclick = () => t2_openModal(item.id);
+
+      const profileBadges = item.profile.map(p => {
+        if (p === 'land')   return '<span class="badge badge-land">Land</span>';
+        if (p === 'expand') return '<span class="badge badge-expand">Expand</span>';
+        if (p === 'others') return '<span class="badge badge-others">Técnico</span>';
+        return '<span class="badge badge-universal">Universal</span>';
+      }).join("");
+
+      card.innerHTML = `
+        <div>
+          <div class="badge-container">
+            <span class="situation-badge">${item.situationBadge}</span>
+            <div class="card-badges">${profileBadges}</div>
+          </div>
+          <div class="card-trigger">${item.triggerText}</div>
+          <div class="card-sub">${item.cardSub}</div>
+        </div>
+        <div class="card-footer-hint cobalt-text">Ver script & tática →</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    t2_updateAllChips();
+    t2_checkResetButtonVisibility();
+  }
+
+  function t2_toggleFilter(val) {
+    if (val === "todos") {
+      t2_activeFilters = ["todos"];
+    } else {
+      t2_activeFilters = t2_activeFilters.filter(f => f !== "todos");
+      const index = t2_activeFilters.indexOf(val);
+      if (index > -1) {
+        t2_activeFilters.splice(index, 1);
+      } else {
+        t2_activeFilters.push(val);
+      }
+      if (t2_activeFilters.length === 0) {
+        t2_activeFilters = ["todos"];
+      }
+    }
+
+    localStorage.setItem('pocket_filters_simple', JSON.stringify(t2_activeFilters));
+    t2_renderGrid();
+    t2_showSavedMsg();
+  }
+
+  function t2_showSavedMsg() {
+    const msg = document.getElementById("t2-filter-saved-msg");
+    msg.textContent = "✓ Filtros salvos";
+    msg.classList.add("visible");
+    clearTimeout(msg._t);
+    msg._t = setTimeout(() => msg.classList.remove("visible"), 2200);
+  }
+
+  function t2_updateAllChips() {
+    document.querySelectorAll("#t2-filter-chips .chip[data-filter]").forEach(chip => {
+      chip.classList.toggle("active-cobalt", t2_activeFilters.includes(chip.dataset.filter));
+    });
+  }
+
+  function t2_checkResetButtonVisibility() {
+    const isCustom = !t2_activeFilters.includes("todos");
+    document.getElementById("t2-reset-btn").classList.toggle("visible", isCustom);
+  }
+
+  function t2_resetAllFilters() {
+    t2_activeFilters = ["todos"];
+    localStorage.setItem('pocket_filters_simple', JSON.stringify(t2_activeFilters));
+    t2_renderGrid();
+  }
+
+  document.querySelectorAll("#t2-filter-chips .chip[data-filter]").forEach(chip => {
+    chip.addEventListener("click", () => t2_toggleFilter(chip.dataset.filter));
+  });
+
+  function t2_openModal(id) {
+    const item = t2_scenarios.find(s => s.id === id);
+    if (!item) return;
+    document.getElementById("t2-m-situation").textContent    = item.situationBadge;
+    document.getElementById("t2-m-title").textContent        = item.triggerText;
+    document.getElementById("t2-m-quick-action").textContent = item.quickAction;
+    document.getElementById("t2-m-action").textContent       = item.bodyLanguage;
+    document.getElementById("t2-m-script").textContent       = item.script;
+    document.getElementById("t2-m-psychology").textContent   = item.psychology;
+    document.getElementById("t2-m-avoid").textContent        = item.avoidQuick;
+    document.getElementById("t2-m-contexts").textContent     = item.contexts;
+    document.getElementById("t2-m-reflect").textContent      = item.reflect;
+    
+    t2_currentModalScript = item.script;
+    document.getElementById("t2-modal-overlay").classList.add("open");
+  }
+
+  function t2_closeModal() {
+    document.getElementById("t2-modal-overlay").classList.remove("open");
+  }
+
+  function t2_copyModalScript() {
+    navigator.clipboard.writeText(t2_currentModalScript).then(() => {
+      const btn = document.getElementById("t2-modal-copy-btn");
+      btn.textContent = "Copiado!";
+      setTimeout(() => btn.textContent = "Copiar Frase", 2000);
+    }).catch(err => console.error("Erro ao copiar: ", err));
+  }
+  document.getElementById("t2-modal-copy-btn").addEventListener("click", t2_copyModalScript);
+
+  document.getElementById("t2-modal-overlay").addEventListener("click", e => {
+    if (e.target.id === "t2-modal-overlay") t2_closeModal();
+  });
+
+
+  // =================================================================
+  // JS ABA 5: PLAYBOOK TÁTICO
+  // =================================================================
+  function t3_toggleAccordion(header) {
+    const item = header.parentElement;
+    item.classList.toggle('open');
+  }
+
+  // CHECKLIST CHECK EVENT LISTENER
+  document.querySelectorAll('.check-item input[type="checkbox"]').forEach(chk => {
+    chk.addEventListener('change', e => {
+      e.target.closest('.check-item').classList.toggle('checked', e.target.checked);
+    });
+  });
+
+  // TECLA ESCAPAR PARA FECHAR MODAIS
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      t1_closeModal();
+      t2_closeModal();
+    }
+  });
+
+  // RENDER INICIAL
+  window.addEventListener('load', () => {
+    t1_renderGrid();
+    t2_renderGrid();
+  });
+</script>
+
+</body>
+</html>

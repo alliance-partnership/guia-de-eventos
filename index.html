@@ -2194,31 +2194,28 @@
 </script>
 
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        netlifyIdentity.init({
-          APIUrl: "https://guia-de-eventos.netlify.app/.netlify/identity"
-        });
+<script>
+  netlifyIdentity.init({
+    APIUrl: "https://guia-de-eventos.netlify.app/.netlify/identity"
+  });
 
-        netlifyIdentity.on("init", function (user) {
-          if (!user) {
-            netlifyIdentity.open("login");
-          } else {
-            document.body.style.display = "block";
-          }
-        });
+  netlifyIdentity.on("init", function (user) {
+    if (!user) {
+      netlifyIdentity.open("login");
+    } else {
+      document.body.style.display = "block";
+    }
+  });
 
-        netlifyIdentity.on("login", function () {
-          document.body.style.display = "block";
-          netlifyIdentity.close();
-        });
+  netlifyIdentity.on("login", function () {
+    document.body.style.display = "block";
+    netlifyIdentity.close();
+  });
 
-        netlifyIdentity.on("logout", function () {
-          document.body.style.display = "none";
-          netlifyIdentity.open("login");
-        });
-      });
-    </script>
-
+  netlifyIdentity.on("logout", function () {
+    document.body.style.display = "none";
+    netlifyIdentity.open("login");
+  });
+</script>
 </body>
 </html>

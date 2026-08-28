@@ -356,6 +356,18 @@
 </style>
 </head>
 <body>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on("init", user => {
+    if (!user) {
+      netlifyIdentity.open("login");
+    }
+  });
+  netlifyIdentity.on("logout", () => {
+    netlifyIdentity.open("login");
+  });
+</script> 
   
 <!-- BARRA FIXA DE NAVEGAÇÃO ENTRE ABAS DA PARCERIA -->
 <nav class="main-nav-bar">
@@ -2179,18 +2191,6 @@
   window.addEventListener('load', () => {
     t1_renderGrid();
     t2_renderGrid();
-  });
-</script>
-
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  netlifyIdentity.on("init", user => {
-    if (!user) {
-      netlifyIdentity.open("login");
-    }
-  });
-  netlifyIdentity.on("logout", () => {
-    netlifyIdentity.open("login");
   });
 </script>
 

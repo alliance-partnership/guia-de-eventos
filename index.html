@@ -356,12 +356,6 @@
 </style>
 </head>
 <body>
-
-<button onclick="netlifyIdentity.open('login')" 
-  style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); 
-  z-index:9999; padding:20px; font-size:18px;">
-  Entrar
-</button>
   
 <!-- BARRA FIXA DE NAVEGAÇÃO ENTRE ABAS DA PARCERIA -->
 <nav class="main-nav-bar">
@@ -2186,33 +2180,6 @@
     t1_renderGrid();
     t2_renderGrid();
   });
-</script>
-
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  setTimeout(function() {
-    netlifyIdentity.init({
-      APIUrl: "https://guia-de-eventos.netlify.app/.netlify/identity"
-    });
-
-    netlifyIdentity.on("init", function (user) {
-      if (!user) {
-        netlifyIdentity.open("login");
-      } else {
-        document.body.style.display = "block";
-      }
-    });
-
-    netlifyIdentity.on("login", function () {
-      document.body.style.display = "block";
-      netlifyIdentity.close();
-    });
-
-    netlifyIdentity.on("logout", function () {
-      document.body.style.display = "none";
-      netlifyIdentity.open("login");
-    });
-  }, 500);
 </script>
 
 </body>

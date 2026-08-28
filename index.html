@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<style>
+  body { display: none; }
+</style>  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Hub Tático de Eventos — Guia do Parceiro (Blip id)</title>
@@ -356,18 +359,6 @@
 </style>
 </head>
 <body>
-
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  netlifyIdentity.on("init", user => {
-    if (!user) {
-      netlifyIdentity.open("login");
-    }
-  });
-  netlifyIdentity.on("logout", () => {
-    netlifyIdentity.open("login");
-  });
-</script> 
   
 <!-- BARRA FIXA DE NAVEGAÇÃO ENTRE ABAS DA PARCERIA -->
 <nav class="main-nav-bar">
@@ -2193,6 +2184,27 @@
     t2_renderGrid();
   });
 </script>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  netlifyIdentity.on("init", user => {
+    if (!user) {
+      netlifyIdentity.open("login");
+    } else {
+      document.body.style.display = "block";
+    }
+  });
+
+  netlifyIdentity.on("login", () => {
+    document.body.style.display = "block";
+    netlifyIdentity.close();
+  });
+
+  netlifyIdentity.on("logout", () => {
+    document.body.style.display = "none";
+    netlifyIdentity.open("login");
+  });
+</script> 
 
 </body>
 </html>

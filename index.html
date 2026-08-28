@@ -2187,24 +2187,28 @@
 
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-  netlifyIdentity.on("init", user => {
-    if (!user) {
-      netlifyIdentity.open("login");
-    } else {
+  window.addEventListener("load", function() {
+    netlifyIdentity.on("init", user => {
+      if (!user) {
+        netlifyIdentity.open("login");
+      } else {
+        document.body.style.display = "block";
+      }
+    });
+
+    netlifyIdentity.on("login", () => {
       document.body.style.display = "block";
-    }
-  });
+      netlifyIdentity.close();
+    });
 
-  netlifyIdentity.on("login", () => {
-    document.body.style.display = "block";
-    netlifyIdentity.close();
-  });
+    netlifyIdentity.on("logout", () => {
+      document.body.style.display = "none";
+      netlifyIdentity.open("login");
+    });
 
-  netlifyIdentity.on("logout", () => {
-    document.body.style.display = "none";
-    netlifyIdentity.open("login");
+    netlifyIdentity.init();
   });
-</script> 
+</script>
 
 </body>
 </html>

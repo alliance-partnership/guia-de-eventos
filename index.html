@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
+<style>
+  body { display: none; }
+</style>
+  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Hub Tático de Eventos — Guia do Parceiro (Blip id)</title>
@@ -2189,29 +2194,31 @@
 </script>
 
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  window.addEventListener("load", function() {
-    netlifyIdentity.on("init", user => {
-      if (!user) {
-        netlifyIdentity.open("login");
-      } else {
-        document.body.style.display = "block";
-      }
-    });
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        netlifyIdentity.init({
+          APIUrl: "https://guia-de-eventos.netlify.app/.netlify/identity"
+        });
 
-    netlifyIdentity.on("login", () => {
-      document.body.style.display = "block";
-      netlifyIdentity.close();
-    });
+        netlifyIdentity.on("init", function (user) {
+          if (!user) {
+            netlifyIdentity.open("login");
+          } else {
+            document.body.style.display = "block";
+          }
+        });
 
-    netlifyIdentity.on("logout", () => {
-      document.body.style.display = "none";
-      netlifyIdentity.open("login");
-    });
+        netlifyIdentity.on("login", function () {
+          document.body.style.display = "block";
+          netlifyIdentity.close();
+        });
 
-    netlifyIdentity.init();
-  });
-</script>
+        netlifyIdentity.on("logout", function () {
+          document.body.style.display = "none";
+          netlifyIdentity.open("login");
+        });
+      });
+    </script>
 
 </body>
 </html>
